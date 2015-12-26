@@ -34,7 +34,7 @@ class Logger:
         if self.syslog_server:
             self.syslog_address = (self.config.syslog.server,self.config.syslog.port)
         self.level = string_to_level(config.syslog.get('level', 'INFO'))
-        if config.default.debug:
+        if config.system.debug:
             self.level = string_to_level("DEBUG")
 
         self.syslogger = logging.getLogger('toughstruct')
@@ -45,7 +45,7 @@ class Logger:
             handler.setFormatter(self.formatter)
             self.syslogger.addHandler(handler)
 
-        if self.config.default.debug:
+        if self.config.system.debug:
             stream_handler = logging.StreamHandler(sys.stderr)
             stream_handler.setFormatter(self.formatter)
             self.syslogger.addHandler(stream_handler)
