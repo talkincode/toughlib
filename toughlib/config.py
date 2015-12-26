@@ -38,7 +38,7 @@ class Config(ConfigDict):
 
     def save(self):
         with open(self.conf_file,'w') as cf:
-            cf.write(json.dumps(self,ensure_ascii=True,indent=4,skipkeys='conf_file',sort_keys=True))
+            cf.write(json.dumps(self,ensure_ascii=True,indent=4,sort_keys=True))
 
     def __repr__(self):
         return '<Config ' + dict.__repr__(self) + '>'
