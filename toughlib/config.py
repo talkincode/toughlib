@@ -38,7 +38,7 @@ class Config(ConfigDict):
 
     def save(self):
         with open(self.conf_file,'w') as cf:
-            yaml.dump(self, cf, default_flow_style=False, explicit_start=True,indent=4)
+            yaml.dump(self, cf, default_flow_style=False)
 
     def __repr__(self):
         return '<Config ' + dict.__repr__(self) + '>'
@@ -48,11 +48,14 @@ def find_config(conf_file=None):
     return Config(conf_file)
 
 if __name__ == "__main__":
-    cfg = find_config("/tmp/tpconfig")
+    cfg = find_config("/tmp/tpconfig2")
     print cfg
-    print type(cfg.database.aa.a)
-    cfg.ccc = "asdad"
+    admin = cfg.admin
+    admin['host'] = '192.1.1.1'
+    cfg.update(admin=admin)
+    cfg.ccc = 'ccc'
     cfg.save()
+    print cfg
 
 
 
