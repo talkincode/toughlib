@@ -32,7 +32,7 @@ class Logger:
         self.syslog_server = config.syslog.server
         self.syslog_port = config.syslog.port
         if self.syslog_server:
-            self.syslog_address = (self.config.syslog.server,self.config.syslog.port`)
+            self.syslog_address = (self.config.syslog.server,self.config.syslog.port)
         self.level = string_to_level(config.syslog.get('level', 'INFO'))
         if config.default.debug:
             self.level = string_to_level("DEBUG")

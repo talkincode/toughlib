@@ -50,6 +50,7 @@ def find_config(conf_file=None):
 if __name__ == "__main__":
     cfg = find_config("/tmp/tpconfig")
     print cfg
+    print type(cfg.database.aa.a)
 
 
 
