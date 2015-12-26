@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #coding=utf-8
 
-import yaml
+import json
 
 class ConfigDict(dict):
 
@@ -33,12 +33,12 @@ class Config(ConfigDict):
         assert(conf_file is not None)
         self.conf_file = conf_file
         with open(self.conf_file) as cf:
-            self.update(yaml.load(cf))
+            self.update(json.loads(cf.read()))
         self.update(**kwargs)
 
     def save(self):
         with open(self.conf_file,'w') as cf:
-            yaml.safe_dump(self, cf, default_flow_style=False)
+            cf.write(json.dumps(self,ensure_ascii=True,indent=4,skipkeys='conf_file',sort_keys=True))
 
     def __repr__(self):
         return '<Config ' + dict.__repr__(self) + '>'
@@ -50,10 +50,10 @@ def find_config(conf_file=None):
 if __name__ == "__main__":
     cfg = find_config("/tmp/tpconfig2")
     print cfg
-    admin = cfg.admin
+    admin = {}
     admin['host'] = '192.1.1.1'
     cfg.update(admin=admin)
-    cfg.ccc = 'ccc'
+    cfg.ccc = u'cc'
     cfg.save()
     print cfg
 
