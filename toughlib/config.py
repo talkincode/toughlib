@@ -38,7 +38,7 @@ class Config(ConfigDict):
 
     def save(self):
         with open(self.conf_file) as cf:
-            yaml.dump(self.config, cf, default_flow_style=False)
+            yaml.dump(self, cf, default_flow_style=False)
 
     def __repr__(self):
         return '<Config ' + dict.__repr__(self) + '>'
