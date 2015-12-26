@@ -278,6 +278,11 @@ def safeunicode(val):
             return val
     return val
 
+def gen_secret(clen=32):
+    rg = random.SystemRandom()
+    r = list('1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    return ''.join([rg.choice(r) for _ in range(clen)])
+
 def timecast(func):
     @functools.wraps(func)
     def warp(*args,**kargs):
