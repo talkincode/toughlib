@@ -3,7 +3,7 @@
 import time
 import json
 from hashlib import md5
-from toughlib import utils
+from toughlib import utils, httpclient
 
 
 def make_sign(secret, params=[]):
@@ -57,6 +57,10 @@ def parse_request(secret, reqbody):
         raise ValueError(u"message sign error")
 
     return req_msg
+
+def request(apiurl, data=None, **kwargs):
+    headers = {"Content-Type": ["application/json"]}
+    return httpclient.post(apiurl, data=data, **kwargs)
 
 if __name__ == "__main__":
     import doctest
