@@ -12,8 +12,7 @@ install_requires = [
     'SQLAlchemy',
     'treq',
     'cyclone',
-    'pycrypto',
-    'PyYAML'
+    'pycrypto'
 ]
 install_requires_empty = []
 
