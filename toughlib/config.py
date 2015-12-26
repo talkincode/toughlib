@@ -37,7 +37,7 @@ class Config(ConfigDict):
         self.update(**kwargs)
 
     def save(self):
-        with open(self.conf_file) as cf:
+        with open(self.conf_file,'w') as cf:
             yaml.dump(self, cf, default_flow_style=False)
 
     def __repr__(self):
