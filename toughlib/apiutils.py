@@ -32,7 +32,7 @@ def check_sign(secret, msg):
     local_sign = make_sign(secret, params)
     return sign == local_sign
 
-def make_request(secret, **params):
+def make_message(secret, **params):
     """
         >>> json.loads(make_request("123456",**dict(code=1,msg=u"中文",nonce=1451122677)))['sign']
         u'58BAF40309BC1DC51D2E2DC43ECCC1A1'
@@ -41,20 +41,6 @@ def make_request(secret, **params):
         params['nonce' ] = str(int(time.time()))
     params['sign'] = make_sign(secret, params.values())
     return json.dumps(params, ensure_ascii=False)
-
-def make_response(secret, **result):
-    """
-        >>> json.loads(make_response("123456",**dict(msg=u"中文",nonce=1451122677)))['sign']
-        u'E0D678176B757385879E4472063B5133'
-        >>> make_response("123456",**dict(msg="helllo",nonce=1451122677))
-        '{"nonce": 1451122677, "msg": "helllo", "code": 0, "sign": "DB30F4D1112C20DFA736F65458F89C64"}'
-    """
-    if 'code' not in result:
-        result["code"] = 0
-    if 'nonce' not in result:
-        result['nonce' ] = str(int(time.time()))
-    result['sign'] = make_sign(secret, result.values())
-    return json.dumps(result, ensure_ascii=False)
 
 
 def parse_request(secret, reqbody):
