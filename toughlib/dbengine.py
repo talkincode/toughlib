@@ -13,10 +13,11 @@ ISOLATION_LEVEL = {
 
 class DBEngine(object):
 
-    def __init__(self,config):
+    def __init__(self,config, **kwargs):
         self.config = config
         self.dbtype = os.environ.get("DB_TYPE", self.config.database.dbtype)
         self.dburl = os.environ.get("DB_URL", self.config.database.dburl)
+        self.pool_size = kwargs.pop('pool_size',self.config.database.pool_size)
 
     def __call__(self):
         return self.get_engine()
@@ -26,14 +27,14 @@ class DBEngine(object):
             return create_engine(
                 self.dburl,
                 echo=bool(self.config.database.echo),
-                pool_size = int(self.config.database.pool_size),
+                pool_size = int(self.pool_size),
                 pool_recycle=int(self.config.database.pool_recycle)
             )
         elif self.dbtype == 'postgresql':
             return create_engine(
                 self.dburl,
                 echo=bool(self.config.database.echo),
-                pool_size = int(self.config.database.pool_size),
+                pool_size = int(self.pool_size),
                 isolation_level = int(ISOLATION_LEVEL.get(self.config.database.isolation_level, 1)),
                 pool_recycle=int(self.config.database.pool_recycle)
             )
@@ -54,7 +55,7 @@ class DBEngine(object):
             return create_engine(
                 self.dburl,
                 echo=bool(self.config.database.echo),
-                pool_size = int(self.config.database.pool_size)
+                pool_size = int(self.pool_size)
             )
 
 def get_engine(config):
