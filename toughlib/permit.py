@@ -137,7 +137,7 @@ def load_handlers(handler_path=None, pkg_prefix=None, excludes=[]):
             logging.info('load_module %s' % _hd)
             importlib.import_module(_hd)
         except:
-            logging.exception("load_module error ")
+            logging.error("skip module %s.%s" % (pkg_prefix,hd))
             continue
 
 
