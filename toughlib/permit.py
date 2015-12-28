@@ -119,9 +119,10 @@ class Permit():
 permit = Permit()
 
 
-def load_handlers(handler_path=None, pkg_prefix=None, excludes=('__init__', 'base', '.svn', '.DS_Store', 'views')):
+def load_handlers(handler_path=None, pkg_prefix=None, excludes=[]):
+    _excludes = ['__init__', 'base', '.svn', '.DS_Store', 'views'] + excludes
     hds = set(os.path.splitext(it)[0] for it in os.listdir(handler_path))
-    hds = [it for it in hds if it not in excludes]
+    hds = [it for it in hds if it not in _excludes]
     for hd in hds:
         try:
             sub_module = os.path.join(handler_path, hd)
