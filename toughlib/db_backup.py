@@ -7,7 +7,6 @@ import json,os,gzip
 class DBBackup:
 
     def __init__(self, sqla_metadata, excludes=[]):
-        self.config = config
         self.metadata = sqla_metadata
         self.excludes = excludes
         self.engine = self.metadata.bind
