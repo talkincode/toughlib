@@ -6,11 +6,11 @@ import json,os,gzip
 
 class DBBackup:
 
-    def __init__(self,dbengine, sqla_metadata, excludes=[]):
+    def __init__(self, sqla_metadata, excludes=[]):
         self.config = config
         self.metadata = sqla_metadata
         self.excludes = excludes
-        self.engine = dbengine
+        self.engine = self.metadata.bind
 
     def dumpdb(self, dumpfile):
         _dir = os.path.split(dumpfile)[0]
