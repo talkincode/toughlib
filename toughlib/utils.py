@@ -42,6 +42,7 @@ class AESCipher:
         self.key = hashlib.sha256(key.encode()).digest()
 
     def encrypt(self, raw):
+        raw = safestr(raw)
         raw = self._pad(raw)
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
@@ -51,7 +52,7 @@ class AESCipher:
         enc = base64.b64decode(enc)
         iv = enc[:AES.block_size]
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
-        return self._unpad(cipher.decrypt(enc[AES.block_size:])).decode('utf-8')
+        return safeunicode(self._unpad(cipher.decrypt(enc[AES.block_size:])))
 
     def _pad(self, s):
         return s + (self.bs - len(s) % self.bs) * chr(self.bs - len(s) % self.bs)
@@ -295,5 +296,9 @@ def timecast(func):
 
 
 if __name__ == '__main__':
-    print gen_order_id()
-    print gen_order_id()
+    aes = AESCipher("5W2489feRMO3DMaeTk5bmRI8v3cTfmAb")
+    aa = aes.encrypt(u"中文".encode('utf-8'))
+    print aa
+    cc = aes.decrypt(aa)
+    print cc.encode('utf-8')
+
