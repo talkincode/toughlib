@@ -56,7 +56,7 @@ def parse_request(api_secret, reqbody, dec_func=False):
     """
     try:
         if callable(dec_func):
-            req_msg = json.loads(dec_func(reqbody)
+            req_msg = json.loads(dec_func(reqbody))
         else:
             req_msg = json.loads(reqbody)
     except Exception as err:
