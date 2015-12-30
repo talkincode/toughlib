@@ -42,6 +42,16 @@ def make_message(secret, **params):
     params['sign'] = make_sign(secret, params.values())
     return json.dumps(params, ensure_ascii=False)
 
+def make_error(secret, msg=None):
+    """
+        >>> json.loads(make_error("123456",msg="error")['sign']
+        u'58BAF40309BC1DC51D2E2DC43ECCC1A1'
+    """
+    params = dict(code=1, msg=msg)
+    params['nonce' ] = str(int(time.time()))
+    params['sign'] = make_sign(secret, params.values())
+    return json.dumps(params, ensure_ascii=False)
+
 
 def parse_request(secret, reqbody):
     """
