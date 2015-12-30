@@ -20,7 +20,7 @@ class CacheManager(object):
                     return data
                 data = func(*args, **kargs)
                 if data is not None:
-                    self.set(key, data)
+                    self.set(key, data, expire)
                 return data
             return func_wrap2
         return func_warp1
