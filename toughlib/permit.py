@@ -138,6 +138,8 @@ def load_handlers(handler_path=None, pkg_prefix=None, excludes=[]):
             importlib.import_module(_hd)
         except Exception as err:
             logging.error("%s, skip module %s.%s" % (str(err),pkg_prefix,hd))
+            import traceback
+            traceback.print_exc()
             continue
 
 
