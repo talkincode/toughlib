@@ -10,12 +10,16 @@ class CacheManager(object):
         self.dbengine = dbengine
         self.cache_table = cache_table
 
-    def cache(self,prefix="cache", expire=3600):
+    def cache(self,prefix="cache",key_name=None, expire=3600):
         def func_warp1(func):
             @functools.wraps(func)
             def func_wrap2(*args, **kargs):
-                sig = md5(repr(args) + repr(kargs)).hexdigest()
-                key = "%s:%s:%s"%(prefix,func.__name__, sig)
+                if key_name and kargs.get(key_name):
+                    key = "%s:%s" % (prefix, kargs.get(key_name))
+                else:
+                    sig = md5(repr(args) + repr(kargs)).hexdigest()
+                    key = "%s:%s:%s"%(prefix,func.__name__, sig)
+
                 data = self.get(key)
                 if data is not None:
                     return data
