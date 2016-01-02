@@ -6,8 +6,9 @@ from sqlalchemy.sql import text as _sql
 from twisted.internet import reactor
 
 class CacheManager(object):
-    def __init__(self, dbengine):
+    def __init__(self, dbengine,cache_table='system_cache'):
         self.dbengine = dbengine
+        self.cache_table = cache_table
 
     def cache(self,prefix="cache", expire=3600):
         def func_warp1(func):
@@ -31,7 +32,7 @@ class CacheManager(object):
         _del_func = self.delete
         with self.dbengine.begin() as conn:
             try:
-                cur = conn.execute(_sql("select _value, _time from system_cache where _key = :key "),key=key)
+                cur = conn.execute(_sql("select _value, _time from %s where _key = :key " % self.cache_table),key=key)
                 _cache =  cur.fetchone()
                 if _cache:
                     _time = int(_cache['_time'])
@@ -47,7 +48,7 @@ class CacheManager(object):
     def delete(self,key):
         with self.dbengine.begin() as conn:
             try:
-                conn.execute(_sql("delete from system_cache where _key = :key "),key=key)
+                conn.execute(_sql("delete from %s where _key = :key " % self.cache_table),key=key)
             except:
                 import traceback
                 traceback.print_exc()
@@ -58,7 +59,7 @@ class CacheManager(object):
         with self.dbengine.begin() as conn:
             _time = expire>0 and (int(time.time()) + int(expire)) or 0
             try:
-                conn.execute(_sql("insert into system_cache values (:key, :value, :time) "),
+                conn.execute(_sql("insert into %s values (:key, :value, :time) " % self.cache_table),
                     key=key,value=raw_data,time=_time)
             except:
                 self.update(key,value,expire)
@@ -69,9 +70,9 @@ class CacheManager(object):
         with self.dbengine.begin() as conn:
             _time = expire>0 and (int(time.time()) + int(expire)) or 0
             try:
-                conn.execute(_sql("""update system_cache 
+                conn.execute(_sql("""update %s 
                                     set _value=:value, _time=:time
-                                    where _key=:key"""),
+                                    where _key=:key""" % self.cache_table),
                                     key=key,value=raw_data,time=_time)
             except:
                 import traceback
