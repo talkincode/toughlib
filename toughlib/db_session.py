@@ -59,7 +59,10 @@ class SessionManager(object):
                 conn.execute(_sql("insert into system_session values (:key, :value, :time) "),
                     key=key,value=value,time=_time)
             except:
-                self._raw_replace(key,value,timeout)
+                conn.execute(_sql("""update system_session 
+                                    set _value=:value, _time=:time
+                                    where _key=:key"""),
+                                    key=key,value=value,time=_time)
 
     def _raw_replace(self, key, value, timeout,**kwargs):
         with self.dbengine.begin() as conn:
