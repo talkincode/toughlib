@@ -66,8 +66,6 @@ class SessionManager(object):
                 conn.execute(_sql("insert into system_session values (:key, :value, :time) "),
                     key=key,value=value,time=_time)
             except:
-                import traceback
-                traceback.print_exc()
                 conn.execute(_sql("""update system_session 
                                     set _value=:value, _time=:time
                                     where _key=:key"""),
