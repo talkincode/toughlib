@@ -36,4 +36,17 @@ class Mcache:
             return None
 
 
+    def aget(self, key, fetchfunc, *args, **kwargs):
+        result = self.get(key)
+        if result:
+            return result
+        if fetchfunc:
+            expire = kwargs.pop('expire',600)
+            result = fetchfunc(*args,**kwargs)
+            if result:
+                self.set(key,result,expire=expire)
+            return result
+
+
+
 
