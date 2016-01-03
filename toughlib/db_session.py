@@ -3,6 +3,7 @@ import time
 import hmac
 import uuid
 import hashlib
+import base64
 from sqlalchemy.sql import text as _sql
 
 class SessionData(dict):
@@ -34,6 +35,12 @@ class SessionManager(object):
         self.secret = secret
         self.dbengine = dbengine
         self.session_timeout = session_timeout
+
+    def encode_data(self,data):
+        return base64.b64encode(pickle.dumps(data, pickle.HIGHEST_PROTOCOL))
+
+    def decode_data(self,raw_data):
+        return pickle.loads(base64.b64decode(raw_data))
 
     def _raw_get(self, key, **kwargs):
         raw_data = None
@@ -84,7 +91,7 @@ class SessionManager(object):
             session_data = raw_data = self._raw_get(session_id)
             if raw_data != None:
                 self._raw_replace(session_id, raw_data, self.session_timeout)
-                session_data = pickle.loads(raw_data)
+                session_data = self.decode_data(raw_data)
             if type(session_data) == type({}):
                 return session_data
             else:
@@ -124,7 +131,7 @@ class SessionManager(object):
     def set(self, request_handler, session):
         request_handler.set_secure_cookie("session_id", session.session_id)
         request_handler.set_secure_cookie("verification", session.hmac_key)
-        session_data = pickle.dumps(dict(session.items()), pickle.HIGHEST_PROTOCOL)
+        session_data = self.encode_data(dict(session.items()))
         self._raw_set(session.session_id, session_data, self.session_timeout)
         
     def _generate_id(self):

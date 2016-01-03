@@ -2,6 +2,7 @@ import pickle
 from hashlib import md5
 import time
 import functools
+import base64
 from sqlalchemy.sql import text as _sql
 from twisted.internet import reactor
 
@@ -9,6 +10,12 @@ class CacheManager(object):
     def __init__(self, dbengine,cache_table='system_cache'):
         self.dbengine = dbengine
         self.cache_table = cache_table
+
+    def encode_data(self,data):
+        return base64.b64encode(pickle.dumps(data, pickle.HIGHEST_PROTOCOL))
+
+    def decode_data(self,raw_data):
+        return pickle.loads(base64.b64decode(raw_data))
 
     def cache(self,prefix="cache",key_name=None, expire=3600):
         def func_warp1(func):
@@ -58,7 +65,7 @@ class CacheManager(object):
             except:
                 import traceback
                 traceback.print_exc()
-        return raw_data and pickle.loads(raw_data) or None
+        return raw_data and self.decode_data(raw_data) or None
 
     def delete(self,key):
         with self.dbengine.begin() as conn:
@@ -70,7 +77,7 @@ class CacheManager(object):
 
 
     def set(self, key, value, expire=0):
-        raw_data = pickle.dumps(value, pickle.HIGHEST_PROTOCOL)
+        raw_data = self.encode_data(value)
         with self.dbengine.begin() as conn:
             _time = expire>0 and (int(time.time()) + int(expire)) or 0
             try:
@@ -84,7 +91,7 @@ class CacheManager(object):
 
 
     def update(self, key, value, expire=0):
-        raw_data = pickle.dumps(value, pickle.HIGHEST_PROTOCOL)
+        raw_data = self.encode_data(value)
         with self.dbengine.begin() as conn:
             _time = expire>0 and (int(time.time()) + int(expire)) or 0
             try:
