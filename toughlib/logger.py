@@ -47,10 +47,10 @@ class Logger:
             handler.setFormatter(self.formatter)
             self.syslogger.addHandler(handler)
 
-        if self.config.system.debug:
-            stream_handler = logging.StreamHandler(sys.stderr)
-            stream_handler.setFormatter(self.formatter)
-            self.syslogger.addHandler(stream_handler)
+        # if self.config.system.debug:
+        #     stream_handler = logging.StreamHandler(sys.stderr)
+        #     stream_handler.setFormatter(self.formatter)
+        #     self.syslogger.addHandler(stream_handler)
 
         self.info = self.syslogger.info
         self.debug = self.syslogger.debug
