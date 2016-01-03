@@ -25,7 +25,7 @@ def string_to_level(log_level):
 class Logger:
 
     def __init__(self,config):
-        self.setup(self.config)
+        self.setup(config)
 
     def setup(self, config):
         self.syslog_enable = config.syslog.enable
