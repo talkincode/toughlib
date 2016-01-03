@@ -285,11 +285,12 @@ def gen_secret(clen=32):
     return ''.join([rg.choice(r) for _ in range(clen)])
 
 def timecast(func):
+    from twisted.python import log
     @functools.wraps(func)
     def warp(*args,**kargs):
         _start = time.clock()
         result = func(*args,**kargs)
-        logging.info("%s cast %.6f second"%(func.__name__,time.clock()-_start))
+        log.msg("%s cast %.6f second"%(func.__name__,time.clock()-_start))
         return result
     return warp
 
