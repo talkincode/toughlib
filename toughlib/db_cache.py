@@ -30,6 +30,17 @@ class CacheManager(object):
             return func_wrap2
         return func_warp1
 
+    def aget(self, key, fetchfunc, *args, **kwargs):
+        result = self.get(key)
+        if result:
+            return result
+        if fetchfunc:
+            expire = kwargs.pop('expire',600)
+            result = fetchfunc(*args,**kwargs)
+            if result:
+                self.set(key,result,expire=expire)
+            return result
+
 
     def get(self, key):
         raw_data = None
