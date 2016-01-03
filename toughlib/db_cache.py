@@ -40,7 +40,6 @@ class CacheManager(object):
     def aget(self, key, fetchfunc, *args, **kwargs):
         result = self.get(key)
         if result:
-            print 'hit cache'
             return result
         if fetchfunc:
             expire = kwargs.pop('expire',600)
