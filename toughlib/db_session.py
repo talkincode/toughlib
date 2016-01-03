@@ -29,6 +29,9 @@ class Session(SessionData):
     def save(self):
         self.session_manager.set(self.request_handler, self)
 
+    def clear(self):
+        self.session_manager.clear(self.request_handler, self)
+
 
 class SessionManager(object):
     def __init__(self, secret, dbengine, session_timeout):
@@ -60,7 +63,6 @@ class SessionManager(object):
         return raw_data
 
     def _raw_set(self, key, value, timeout,**kwargs):
-        print "_raw_set",key,value,timeout
         with self.dbengine.begin() as conn:
             _time = int(time.time()) + int(timeout)
             try:
@@ -72,8 +74,15 @@ class SessionManager(object):
                                     where _key=:key"""),
                                     key=key,value=value,time=_time)
 
+    def _delete(self, key):
+        with self.dbengine.begin() as conn:
+            try:
+                conn.execute(_sql("delete from system_session where _key = :key "),key=key)
+            except:
+                import traceback
+                traceback.print_exc()
+
     def _raw_replace(self, key, value, timeout,**kwargs):
-        print "_raw_replace",key,value,timeout
         with self.dbengine.begin() as conn:
             _time = int(time.time()) + int(timeout)
             try:
@@ -132,7 +141,11 @@ class SessionManager(object):
         request_handler.set_secure_cookie("session_id", session.session_id)
         request_handler.set_secure_cookie("verification", session.hmac_key)
         session_data = self.encode_data(dict(session.items()))
-        self._raw_set(session.session_id, session_data, self.session_timeout)
+        self._raw_set(session.session_id, session_data, self.session_timeout)   
+
+    def clear(self, request_handler, session):
+        request_handler.clear_all_cookies()  
+        self._delete(session.session_id)
         
     def _generate_id(self):
         new_id = hashlib.sha256(self.secret + str(uuid.uuid4()))
