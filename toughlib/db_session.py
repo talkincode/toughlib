@@ -60,6 +60,7 @@ class SessionManager(object):
         return raw_data
 
     def _raw_set(self, key, value, timeout,**kwargs):
+        print "_raw_set",key,value,timeout
         with self.dbengine.begin() as conn:
             _time = int(time.time()) + int(timeout)
             try:
@@ -72,6 +73,7 @@ class SessionManager(object):
                                     key=key,value=value,time=_time)
 
     def _raw_replace(self, key, value, timeout,**kwargs):
+        print "_raw_replace",key,value,timeout
         with self.dbengine.begin() as conn:
             _time = int(time.time()) + int(timeout)
             try:
