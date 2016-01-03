@@ -25,16 +25,17 @@ def string_to_level(log_level):
 class Logger:
 
     def __init__(self,config):
-        self.config = config
-        self.syslog_enable = os.environ.get("SYSLOG_ENABLE",config.syslog.enable)
-        self.syslog_server = os.environ.get("SYSLOG_SERVER",config.syslog.server)
-        self.syslog_port = os.environ.get("SYSLOG_PORT",config.syslog.port)
-        self.syslog_level = os.environ.get("SYSLOG_LEVEL",config.syslog.level)
-        self.syslog_shost = os.environ.get("SYSLOG_SHOST",config.syslog.shost)
+        self.setup(self.config)
+
+    def setup(self, config):
+        self.syslog_enable = config.syslog.enable
+        self.syslog_server = config.syslog.server
+        self.syslog_port = config.syslog.port
+        self.syslog_level = config.syslog.level
+        self.syslog_shost = config.syslog.shost
         self.formatter = logging.Formatter(
             u'%(asctime)s {0} %(name)s %(levelname)-8s %(module)s -> %(funcName)s (%(lineno)d) %(message)s'.format(self.syslog_shost),
             '%b %d %H:%M:%S', )
-
         self.level = string_to_level(self.syslog_level)
         if config.system.debug:
             self.level = string_to_level("DEBUG")
@@ -47,10 +48,6 @@ class Logger:
             handler.setFormatter(self.formatter)
             self.syslogger.addHandler(handler)
 
-        # if self.config.system.debug:
-        #     stream_handler = logging.StreamHandler(sys.stderr)
-        #     stream_handler.setFormatter(self.formatter)
-        #     self.syslogger.addHandler(stream_handler)
 
         self.info = self.syslogger.info
         self.debug = self.syslogger.debug
