@@ -77,7 +77,8 @@ class CacheManager(object):
                 conn.execute(_sql("insert into %s values (:key, :value, :time) " % self.cache_table),
                     key=key,value=raw_data,time=_time)
             except:
-                conn.execute(_sql("update %s set _value=:value, _time=:time where _key=:key" % self.cache_table),
+                conn.execute(_sql("delete from %s where _key = :key " % self.cache_table),key=key)
+                conn.execute(_sql("insert into %s values (:key, :value, :time) " % self.cache_table),
                     key=key,value=raw_data,time=_time)
                 
 
