@@ -9,7 +9,7 @@ class DBBackup:
     def __init__(self, sqla_metadata, excludes=[]):
         self.metadata = sqla_metadata
         self.excludes = excludes
-        self.engine = self.metadata.bind
+        self.dbengine = self.metadata.bind
 
     def dumpdb(self, dumpfile):
         _dir = os.path.split(dumpfile)[0]
