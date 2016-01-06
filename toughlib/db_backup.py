@@ -18,7 +18,7 @@ class DBBackup:
 
         with self.dbengine.begin() as db:
             with gzip.open(dumpfile, 'wb') as dumpfs:
-                tables = {_name:_tables for _name, _tables in metadata.tables.items() if _name not in self.excludes}
+                tables = {_name:_tables for _name, _tables in self.metadata.tables.items() if _name not in self.excludes}
                 table_headers = ('table_names', tables.keys())
                 dumpfs.write(json.dumps(table_headers, ensure_ascii=False).encode('utf-8'))
                 dumpfs.write('\n')
