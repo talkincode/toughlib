@@ -18,11 +18,11 @@ class DBBackup:
 
         with self.dbengine.begin() as db:
             with gzip.open(dumpfile, 'wb') as dumpfs:
-                tables = {_name:_tables for _name, _tables in self.metadata.tables.items() if _name not in self.excludes}
+                tables = {_name:_table for _name, _table in self.metadata.tables.items() if _name not in self.excludes}
                 table_headers = ('table_names', tables.keys())
                 dumpfs.write(json.dumps(table_headers, ensure_ascii=False).encode('utf-8'))
                 dumpfs.write('\n')
-                for _name,_table in tables:
+                for _name,_table in tables.iteritems():
                     rows = db.execute(select([_table]))
                     for row in rows:
                         obj = (_name, dict(row.items()))
