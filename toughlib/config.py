@@ -33,7 +33,7 @@ class Config(ConfigDict):
     def __init__(self, conf_file=None, **kwargs):
         assert(conf_file is not None)
         print "loading config {0}".format(conf_file)
-        with open(self.conf_file) as cf:
+        with open(conf_file) as cf:
             self.update(json.loads(cf.read()))
         self.update(**kwargs)
         self.conf_file = conf_file
