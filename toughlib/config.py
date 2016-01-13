@@ -38,16 +38,17 @@ class Config(ConfigDict):
         self.update(**kwargs)
 
     def save(self):
-        with open(self.conf_file,'w') as cf:
-            try:
-                cf.write(json.dumps(self,ensure_ascii=True,indent=4,sort_keys=True))
-                cf.flush()
-                os.fsync(cf.fileno())
-            except:
-                import traceback
-                traceback.print_exc()
-
-
+        cf = open(self.conf_file,'w'):
+        try:
+            print "update config {0}".format(self.conf_file)
+            cf.write(json.dumps(self,ensure_ascii=True,indent=4,sort_keys=True))
+            cf.flush()
+            os.fsync(cf.fileno())
+        except:
+            import traceback
+            traceback.print_exc()
+        finally:
+            cf.close()
 
 
     def __repr__(self):
