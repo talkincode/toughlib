@@ -20,7 +20,7 @@ class Permit():
         """ 注册权限
         """
         if not path: return
-        if path in self.routes[path]:
+        if path in self.routes:
             if self.routes[path].get('custom'):
                 return
 
