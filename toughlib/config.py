@@ -32,24 +32,16 @@ class Config(ConfigDict):
 
     def __init__(self, conf_file=None, **kwargs):
         assert(conf_file is not None)
-        self.conf_file = conf_file
         print "loading config {0}".format(self.conf_file)
         with open(self.conf_file) as cf:
             self.update(json.loads(cf.read()))
         self.update(**kwargs)
+        self.conf_file = conf_file
 
     def save(self):
-        cf = open(self.conf_file,'w')
-        try:
-            print "update config {0}".format(self.conf_file)
+        print "update config {0}".format(self.conf_file)
+        with open(self.conf_file) as cf:
             cf.write(json.dumps(self,ensure_ascii=True,indent=4,sort_keys=True))
-            cf.flush()
-            os.fsync(cf.fileno())
-        except:
-            import traceback
-            traceback.print_exc()
-        finally:
-            cf.close()
 
 
     def __repr__(self):
