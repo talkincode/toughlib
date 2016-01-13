@@ -38,7 +38,7 @@ class Config(ConfigDict):
         self.update(**kwargs)
 
     def save(self):
-        cf = open(self.conf_file,'w'):
+        cf = open(self.conf_file,'w')
         try:
             print "update config {0}".format(self.conf_file)
             cf.write(json.dumps(self,ensure_ascii=True,indent=4,sort_keys=True))
