@@ -13,7 +13,7 @@ class Permit():
     @TODO: ⚠注意，这个权限管理在多进程时可能会有数据一致性问题，不过现在展示不解决它
     """
     routes = {}
-    all_handlers = []
+    handlers = {}
 
     def add_route(self, handle_cls, path, name, category, handle_params={}, is_menu=False, order=time.time(),
                   is_open=True, oem=False):
@@ -38,7 +38,11 @@ class Permit():
 
     def add_handler(self, handle_cls, path, handle_params={}):
         print ("add handler [%s:%s]" % (path, repr(handle_cls)))
-        self.all_handlers.append((path, handle_cls, handle_params))
+        self.handlers[path]= (path, handle_cls, handle_params)
+
+    @property
+    def all_handlers(self):
+        return self.handlers.values()
 
     def get_route(self, path):
         """ 获取一个权限资源
