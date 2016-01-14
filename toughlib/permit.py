@@ -16,12 +16,12 @@ class Permit():
     all_handlers = []
 
     def add_route(self, handle_cls, path, name, category, handle_params={}, is_menu=False, order=time.time(),
-                  is_open=True, custom=False):
+                  is_open=True, oem=False):
         """ 注册权限
         """
         if not path: return
         if path in self.routes:
-            if self.routes[path].get('custom'):
+            if self.routes[path].get('oem'):
                 return
 
         self.routes[path] = dict(
@@ -32,7 +32,7 @@ class Permit():
             oprs=[],  # 关联的操作员
             order=order,  # 排序
             is_open=is_open,  # 是否开放授权
-            custom=custom #是否定制功能
+            oem=oem #是否定制功能
         )
         self.add_handler(handle_cls, path, handle_params)
 

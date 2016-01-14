@@ -35,4 +35,4 @@ button_style_block = {"class": "btn btn-block"}
 
 
 if __name__ == "__main__":
-    print is_period.valid("") == True
+    print len_of(1,32).valid('') 
