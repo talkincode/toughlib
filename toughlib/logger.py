@@ -10,6 +10,7 @@ EVENT_INFO = 'syslog_info'
 EVENT_DEBUG = 'syslog_debug'
 EVENT_ERROR = 'syslog_error'
 EVENT_EXCEPTION = 'syslog_exception'
+EVENT_SETUP = 'syslog_setup'
 
 def string_to_level(log_level):
     if log_level == "CRITICAL":
@@ -60,6 +61,9 @@ class Logger:
         self.log = self.syslogger.log
         self.msg = self.syslogger.info
         self.err = self.syslogger.error
+
+    def event_syslog_setup(self,config):
+        self.setup(config)
 
     def event_syslog_info(self, msg):
         self.info(msg)
