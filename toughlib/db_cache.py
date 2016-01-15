@@ -10,6 +10,7 @@ class CacheManager(object):
     def __init__(self, dbengine,cache_table='system_cache'):
         self.dbengine = dbengine
         self.cache_table = cache_table
+        self.check_expire(first_delay=10)
 
     def encode_data(self,data):
         return base64.b64encode(pickle.dumps(data, pickle.HIGHEST_PROTOCOL))
@@ -48,6 +49,15 @@ class CacheManager(object):
                 self.set(key,result,expire=expire)
             return result
 
+    def check_expire(self, first_delay=0):
+        if first_delay > 0:
+            reactor.callLater(first_delay, self.check_expire)
+        with self.dbengine.begin() as conn:
+            try:
+                conn.execute(_sql("delete from %s where _time > 0 and _time < :time" % self.cache_table),time=int(time.time()))
+            except:
+                pass
+        reactor.callLater(120.0, self.check_expire)
 
     def get(self, key):
         raw_data = None
