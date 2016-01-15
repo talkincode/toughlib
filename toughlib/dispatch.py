@@ -18,7 +18,7 @@ class EventDispatcher:
         d = {}
         reflect.accumulateMethods(obj, d, self.prefix)
         for k,v in d.items():
-            self.registerHandler(k, v)
+            self.sub(k, v)
 
     def pub(self, name, *args, **kwargs):
         for cb in self.callbacks[name]:
