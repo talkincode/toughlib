@@ -68,7 +68,7 @@ class Logger:
         self.debug(msg)
 
     def event_syslog_error(self, msg):
-        self.debug(msg)
+        self.error(msg)
 
     def event_syslog_exception(self, err):
         self.syslogger.exception(err)
