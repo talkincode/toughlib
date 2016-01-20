@@ -31,6 +31,7 @@ class EventDispatcher:
         async = kwargs.pop("async",False)
         results = []
         for func in self.callbacks[name]:
+            self.log.debug("trigger event  %s --> %s" % (name, repr(func)))
             if async:
                 deferd = deferToThread(func, *args, **kwargs)
                 results.append(deferd)
