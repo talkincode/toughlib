@@ -4,6 +4,7 @@
 import types
 from twisted.internet.threads import deferToThread
 from twisted.python import reflect
+from twisted.internet import defer
 
 class EventDispatcher:
 
