@@ -5,8 +5,10 @@ import types
 from twisted.internet.threads import deferToThread
 from twisted.python import reflect
 from twisted.internet import defer
+from twisted.logger import Logger
 
 class EventDispatcher:
+    log = Logger()
 
     def __init__(self, prefix="event_"):
         self.prefix = prefix
@@ -15,7 +17,7 @@ class EventDispatcher:
 
     def sub(self, name, func):
         self.callbacks.setdefault(name, []).append(func)
-
+        self.log.info('register event %s --> %s' % (name, repr(func)))
 
     def register(self, obj):
         d = {}
