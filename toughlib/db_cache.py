@@ -6,6 +6,10 @@ import base64
 from sqlalchemy.sql import text as _sql
 from twisted.internet import reactor
 
+CACHE_SET_EVENT = 'dbcache_set'
+CACHE_DELETE_EVENT = 'dbcache_delete'
+CACHE_UPDATE_EVENT = 'dbcache_update'
+
 class CacheManager(object):
     def __init__(self, dbengine,cache_table='system_cache'):
         self.dbengine = dbengine
@@ -77,6 +81,10 @@ class CacheManager(object):
                 traceback.print_exc()
         return raw_data and self.decode_data(raw_data) or None
 
+
+    def event_cache_delete(self, key):
+        self.delete(key)
+
     def delete(self,key):
         with self.dbengine.begin() as conn:
             try:
@@ -85,6 +93,8 @@ class CacheManager(object):
                 import traceback
                 traceback.print_exc()
 
+    def event_cache_set(self, key, value, expire=0):
+        self.set(key, value, expire)
 
     def set(self, key, value, expire=0):
         raw_data = self.encode_data(value)
@@ -98,7 +108,8 @@ class CacheManager(object):
                 conn.execute(_sql("insert into %s values (:key, :value, :time) " % self.cache_table),
                     key=key,value=raw_data,time=_time)
                 
-
+    def event_cache_update(self, key, value, expire=0):
+        self.update(key, value, expire)
 
     def update(self, key, value, expire=0):
         raw_data = self.encode_data(value)
@@ -112,7 +123,6 @@ class CacheManager(object):
             except:
                 import traceback
                 traceback.print_exc()
-
 
 
 
