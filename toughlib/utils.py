@@ -206,12 +206,13 @@ def fmt_online_time(ctime):
         return u"%s分钟" % (int(m))
 
 
-def add_months(dt,months):
+def add_months(dt,months, days=0):
     month = dt.month - 1 + months
     year = dt.year + month / 12
     month = month % 12 + 1
     day = min(dt.day,calendar.monthrange(year,month)[1])
-    return dt.replace(year=year, month=month, day=day)
+    dt = dt.replace(year=year, month=month, day=day)
+    return dt + datetime.timedelta(days=days)
 
 
 def is_connect(timestr, period=600):
