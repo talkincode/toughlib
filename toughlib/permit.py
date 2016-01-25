@@ -6,7 +6,7 @@ import importlib
 import logging
 from cyclone.web import RequestHandler
 from cyclone.websocket import WebSocketHandler
-
+from toughlib import dispatch
 
 class Permit():
     """ 权限菜单管理
@@ -153,4 +153,25 @@ def load_handlers(handler_path=None, pkg_prefix=None, excludes=[]):
             continue
 
 
+def load_events(event_path=None,pkg_prefix=None,excludes=[],**kwargs):
+    _excludes = ['__init__','settings'] + excludes
+    evs = set(os.path.splitext(it)[0] for it in os.listdir(event_path))
+    evs = [it for it in evs if it not in _excludes]
+    for ev in evs:
+        try:
+            sub_module = os.path.join(event_path, ev)
+            if os.path.isdir(sub_module):
+                logging.info('load sub event %s' % ev)
+                load_events(
+                    event_path=sub_module,
+                    pkg_prefix="{0}.{1}".format(pkg_prefix, ev)
+                )
+            _ev = "{0}.{1}".format(pkg_prefix, ev)
+            logging.info('load_event %s' % _ev)
+            dispatch.register(importlib.import_module(_ev).__call__(**kwargs))
+        except Exception as err:
+            logging.error("%s, skip module %s.%s" % (str(err),pkg_prefix,ev))
+            import traceback
+            traceback.print_exc()
+            continue
 
