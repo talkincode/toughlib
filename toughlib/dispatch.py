@@ -6,7 +6,6 @@ from twisted.internet.threads import deferToThread
 from twisted.python import reflect
 from twisted.internet import defer
 from twisted.logger import Logger
-import functions
 
 class EventDispatcher:
     log = Logger()
