@@ -31,10 +31,8 @@ def check_sign(api_secret, msg):
     sign = msg['sign']
     params = [utils.safestr(msg[k]) for k in msg if k != 'sign']
     local_sign = make_sign(api_secret, params)
-    result = (sign == local_sign)
-    if not result:
-        logger.error("check_sign failure, sign:%s != local_sign:%s" %(sign,local_sign))
-    return result
+    logger.debug("check_sign, client sign:%s vs local_sign:%s" %(sign,local_sign))
+    return sign == local_sign
 
 def make_message(api_secret, enc_func=False, **params):
     """
