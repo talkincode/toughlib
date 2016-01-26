@@ -6,6 +6,7 @@ import socket
 import logging
 import logging.handlers
 from toughlib import dispatch
+import functools
 
 EVENT_INFO = 'syslog_info'
 EVENT_DEBUG = 'syslog_debug'
@@ -79,4 +80,9 @@ class Logger:
         self.syslogger.exception(err)
 
 
+setup = functools.partial(dispatch.pub, EVENT_SETUP) 
+info = functools.partial(dispatch.pub, EVENT_INFO)
+debug = functools.partial(dispatch.pub, EVENT_DEBUG)
+error = functools.partial(dispatch.pub, EVENT_ERROR)
+exception = functools.partial(dispatch.pub, EVENT_EXCEPTION)
 
