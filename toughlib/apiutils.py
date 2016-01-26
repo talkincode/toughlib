@@ -33,7 +33,7 @@ def check_sign(api_secret, msg):
     local_sign = make_sign(api_secret, params)
     result = (sign == local_sign)
     if not result:
-        dispatch.pub(logger.EVENT_DEBUG, "check_sign failure, sign:%s != local_sign:%s" %(sign,local_sign))
+        dispatch.pub(logger.EVENT_ERROR, "check_sign failure, sign:%s != local_sign:%s" %(sign,local_sign))
     return result
 
 def make_message(api_secret, enc_func=False, **params):
