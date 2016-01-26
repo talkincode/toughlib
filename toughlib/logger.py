@@ -88,21 +88,21 @@ setup = functools.partial(dispatch.pub, EVENT_SETUP)
 
 
 def info(message,**kwargs):
-    if EVENT_INFO in dispatch.callbacks:
+    if EVENT_INFO in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_INFO,message,**kwargs)
     else:
         __default_logger_.info(message)
 
 
 def debug(message,**kwargs):
-    if EVENT_DEBUG in dispatch.callbacks:
+    if EVENT_DEBUG in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_DEBUG,message,**kwargs)
     else:
         __default_logger_.debug(message)
 
 
 def error(message,**kwargs):
-    if EVENT_ERROR in dispatch.callbacks:
+    if EVENT_ERROR in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_ERROR,message,**kwargs)
     else:
         __default_logger_.error(message)
