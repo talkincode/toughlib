@@ -4,6 +4,7 @@ import time
 import json
 from hashlib import md5
 from toughlib import utils, httpclient
+from toughlib import dispatch, logger
 
 
 def make_sign(api_secret, params=[]):
@@ -30,11 +31,14 @@ def check_sign(api_secret, msg):
     sign = msg['sign']
     params = [utils.safestr(msg[k]) for k in msg if k != 'sign']
     local_sign = make_sign(api_secret, params)
-    return sign == local_sign
+    result = (sign == local_sign)
+    if not result:
+        dispatch.pub(logger.EVENT_DEBUG, "check_sign failure, sign:%s != local_sign:%s" %(sign,local_sign))
+    return result
 
 def make_message(api_secret, enc_func=False, **params):
     """
-        >>> json.loads(make_request("123456",**dict(code=1,msg=u"中文",nonce=1451122677)))['sign']
+        >>> json.loads(make_message("123456",**dict(code=1,msg=u"中文",nonce=1451122677)))['sign']
         u'58BAF40309BC1DC51D2E2DC43ECCC1A1'
     """
     if 'nonce' not in params:
@@ -66,6 +70,21 @@ def parse_request(api_secret, reqbody, dec_func=False):
         raise ValueError(u"message sign error")
 
     return req_msg
+
+def parse_form_request(api_secret, request):
+    """
+        >>> parse_form_request("123456",{"nonce": 1451122677, "msg": "helllo", "code": 0, "sign": "DB30F4D1112C20DFA736F65458F89C64"})
+        {'nonce': 1451122677, 'msg': 'helllo', 'code': 0, 'sign': 'DB30F4D1112C20DFA736F65458F89C64'}
+    """
+    _request = request
+    if hasattr(request, "get_params"):
+        _request = request.get_params()
+
+    if not check_sign(api_secret, request):
+        raise ValueError(u"message sign error")
+
+    return request
+
 
 def request(apiurl, data=None, **kwargs):
     headers = {"Content-Type": ["application/json"]}
