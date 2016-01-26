@@ -7,6 +7,7 @@ import logging
 import logging.handlers
 from toughlib import dispatch
 from twisted.logger import Logger
+import functools
 
 EVENT_INFO = 'syslog_info'
 EVENT_DEBUG = 'syslog_debug'
