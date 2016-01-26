@@ -5,6 +5,7 @@ import os
 import socket
 import logging
 import logging.handlers
+from toughlib import dispatch
 
 EVENT_INFO = 'syslog_info'
 EVENT_DEBUG = 'syslog_debug'
@@ -76,7 +77,6 @@ class Logger:
 
     def event_syslog_exception(self, err):
         self.syslogger.exception(err)
-
 
 
 
