@@ -6,13 +6,15 @@ import socket
 import logging
 import logging.handlers
 from toughlib import dispatch
-import functools
+from twisted.logger import Logger
 
 EVENT_INFO = 'syslog_info'
 EVENT_DEBUG = 'syslog_debug'
 EVENT_ERROR = 'syslog_error'
 EVENT_EXCEPTION = 'syslog_exception'
 EVENT_SETUP = 'syslog_setup'
+
+__default_logger_ = Logger()
 
 def string_to_level(log_level):
     if log_level == "CRITICAL":
@@ -81,8 +83,29 @@ class Logger:
 
 
 setup = functools.partial(dispatch.pub, EVENT_SETUP) 
-info = functools.partial(dispatch.pub, EVENT_INFO)
-debug = functools.partial(dispatch.pub, EVENT_DEBUG)
-error = functools.partial(dispatch.pub, EVENT_ERROR)
+
+
+
+def info(message,**kwargs):
+    if EVENT_INFO in dispatch.callbacks:
+        dispatch.pub(EVENT_INFO,message,**kwargs)
+    else:
+        __default_logger_.info(message)
+
+
+def debug(message,**kwargs):
+    if EVENT_DEBUG in dispatch.callbacks:
+        dispatch.pub(EVENT_DEBUG,message,**kwargs)
+    else:
+        __default_logger_.debug(message)
+
+
+def error(message,**kwargs):
+    if EVENT_ERROR in dispatch.callbacks:
+        dispatch.pub(EVENT_ERROR,message,**kwargs)
+    else:
+        __default_logger_.error(message)
+
+
 exception = functools.partial(dispatch.pub, EVENT_EXCEPTION)
 
