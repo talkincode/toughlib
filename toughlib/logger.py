@@ -58,7 +58,10 @@ class Logger:
             self.syslogger.addHandler(handler)
         else:
             handler = logging.StreamHandler(sys.stderr)
-            handler.setFormatter(self.formatter)
+            formatter = logging.Formatter(
+            u'%(asctime)s %(levelname)-4s %(module)s -> %(funcName)s (%(lineno)d) %(message)s'.format(self.syslog_shost),
+            '%b %d %H:%M:%S', )
+            handler.setFormatter(formatter)
             self.syslogger.addHandler(handler)
 
         self.info = self.syslogger.info
