@@ -57,7 +57,9 @@ class Logger:
             handler.setFormatter(self.formatter)
             self.syslogger.addHandler(handler)
         else:
-            self.syslogger = __default_logger_
+            stream_handler = logging.StreamHandler(sys.stderr)
+            handler.setFormatter(self.formatter)
+            self.syslogger.addHandler(handler)
 
         self.info = self.syslogger.info
         self.debug = self.syslogger.debug
