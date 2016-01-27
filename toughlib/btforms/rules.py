@@ -35,4 +35,4 @@ button_style_block = {"class": "btn btn-block"}
 
 
 if __name__ == "__main__":
-    print len_of(1,32).valid('') 
+    print is_time_hm.valid('aa:22') 

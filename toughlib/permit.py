@@ -167,7 +167,7 @@ def load_events(event_path=None,pkg_prefix=None,excludes=[],**kwargs):
                     pkg_prefix="{0}.{1}".format(pkg_prefix, ev)
                 )
             _ev = "{0}.{1}".format(pkg_prefix, ev)
-            logging.info('load_event %s' % _ev)
+            logging.info('load_event %s with params:%s' % (_ev,repr(kwargs)))
             dispatch.register(importlib.import_module(_ev).__call__(**kwargs))
         except Exception as err:
             logging.error("%s, skip module %s.%s" % (str(err),pkg_prefix,ev))
