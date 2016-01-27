@@ -36,7 +36,7 @@ class Permit():
         self.add_handler(handle_cls, path, handle_params)
 
     def add_handler(self, handle_cls, path, handle_params={}):
-        print ("add handler [%s:%s]" % (path, repr(handle_cls)))
+        logger.info("add handler [%s:%s]" % (path, repr(handle_cls)))
         self.handlers[path]= (path, handle_cls, handle_params)
 
     @property
@@ -136,14 +136,14 @@ def load_handlers(handler_path=None, pkg_prefix=None, excludes=[]):
         try:
             sub_module = os.path.join(handler_path, hd)
             if os.path.isdir(sub_module):
-                print ('load sub module %s' % hd)
+                logger.info('load sub module %s' % hd)
                 load_handlers(
                     handler_path=sub_module,
                     pkg_prefix="{0}.{1}".format(pkg_prefix, hd)
                 )
 
             _hd = "{0}.{1}".format(pkg_prefix, hd)
-            print ('load_module %s' % _hd)
+            logger.info('load_module %s' % _hd)
             importlib.import_module(_hd)
         except Exception as err:
             logger.error("%s, skip module %s.%s" % (str(err),pkg_prefix,hd))
@@ -160,7 +160,7 @@ def load_events(event_path=None,pkg_prefix=None,excludes=[],event_params={}):
         try:
             sub_module = os.path.join(event_path, ev)
             if os.path.isdir(sub_module):
-                print ('load sub event %s' % ev)
+                logger.info('load sub event %s' % ev)
                 load_events(
                     event_path=sub_module,
                     pkg_prefix="{0}.{1}".format(pkg_prefix, ev),
@@ -168,7 +168,7 @@ def load_events(event_path=None,pkg_prefix=None,excludes=[],event_params={}):
                     event_params=event_params,
                 )
             _ev = "{0}.{1}".format(pkg_prefix, ev)
-            print ('load_event %s with params:%s' % (_ev,repr(event_params)))
+            logger.info('load_event %s with params:%s' % (_ev,repr(event_params)))
             dispatch.register(importlib.import_module(_ev).__call__(**event_params))
         except Exception as err:
             logger.error("%s, skip module %s.%s" % (str(err),pkg_prefix,ev))
