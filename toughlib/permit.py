@@ -3,10 +3,9 @@
 import time
 import os
 import importlib
-import logging
 from cyclone.web import RequestHandler
 from cyclone.websocket import WebSocketHandler
-from toughlib import dispatch
+from toughlib import dispatch,logger
 
 class Permit():
     """ 权限菜单管理
@@ -137,17 +136,17 @@ def load_handlers(handler_path=None, pkg_prefix=None, excludes=[]):
         try:
             sub_module = os.path.join(handler_path, hd)
             if os.path.isdir(sub_module):
-                logging.info('load sub module %s' % hd)
+                logger.info('load sub module %s' % hd)
                 load_handlers(
                     handler_path=sub_module,
                     pkg_prefix="{0}.{1}".format(pkg_prefix, hd)
                 )
 
             _hd = "{0}.{1}".format(pkg_prefix, hd)
-            logging.info('load_module %s' % _hd)
+            logger.info('load_module %s' % _hd)
             importlib.import_module(_hd)
         except Exception as err:
-            logging.error("%s, skip module %s.%s" % (str(err),pkg_prefix,hd))
+            logger.error("%s, skip module %s.%s" % (str(err),pkg_prefix,hd))
             import traceback
             traceback.print_exc()
             continue
@@ -161,16 +160,16 @@ def load_events(event_path=None,pkg_prefix=None,excludes=[],**kwargs):
         try:
             sub_module = os.path.join(event_path, ev)
             if os.path.isdir(sub_module):
-                logging.info('load sub event %s' % ev)
+                logger.info('load sub event %s' % ev)
                 load_events(
                     event_path=sub_module,
                     pkg_prefix="{0}.{1}".format(pkg_prefix, ev)
                 )
             _ev = "{0}.{1}".format(pkg_prefix, ev)
-            logging.info('load_event %s with params:%s' % (_ev,repr(kwargs)))
+            logger.info('load_event %s with params:%s' % (_ev,repr(kwargs)))
             dispatch.register(importlib.import_module(_ev).__call__(**kwargs))
         except Exception as err:
-            logging.error("%s, skip module %s.%s" % (str(err),pkg_prefix,ev))
+            logger.error("%s, skip module %s.%s" % (str(err),pkg_prefix,ev))
             import traceback
             traceback.print_exc()
             continue
