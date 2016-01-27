@@ -56,7 +56,8 @@ class Logger:
             handler = logging.handlers.SysLogHandler(address=(self.syslog_server, self.syslog_port))
             handler.setFormatter(self.formatter)
             self.syslogger.addHandler(handler)
-
+        else:
+            self.syslogger = __default_logger_
 
         self.info = self.syslogger.info
         self.debug = self.syslogger.debug

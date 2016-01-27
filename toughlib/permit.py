@@ -139,7 +139,8 @@ def load_handlers(handler_path=None, pkg_prefix=None, excludes=[]):
                 logger.info('load sub module %s' % hd)
                 load_handlers(
                     handler_path=sub_module,
-                    pkg_prefix="{0}.{1}".format(pkg_prefix, hd)
+                    pkg_prefix="{0}.{1}".format(pkg_prefix, hd),
+                    excludes=excludes
                 )
 
             _hd = "{0}.{1}".format(pkg_prefix, hd)
