@@ -163,11 +163,13 @@ def load_events(event_path=None,pkg_prefix=None,excludes=[],event_params={}):
                 print ('load sub event %s' % ev)
                 load_events(
                     event_path=sub_module,
-                    pkg_prefix="{0}.{1}".format(pkg_prefix, ev)
+                    pkg_prefix="{0}.{1}".format(pkg_prefix, ev),
+                    excludes=excludes,
+                    event_params=event_params,
                 )
             _ev = "{0}.{1}".format(pkg_prefix, ev)
             print ('load_event %s with params:%s' % (_ev,repr(event_params)))
-            dispatch.register(importlib.import_module(_ev).init(**event_params))
+            dispatch.register(importlib.import_module(_ev).__call__(**event_params))
         except Exception as err:
             logger.error("%s, skip module %s.%s" % (str(err),pkg_prefix,ev))
             import traceback
