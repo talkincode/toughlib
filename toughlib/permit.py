@@ -152,7 +152,7 @@ def load_handlers(handler_path=None, pkg_prefix=None, excludes=[]):
             continue
 
 
-def load_events(event_path=None,pkg_prefix=None,excludes=[],**kwargs):
+def load_events(event_path=None,pkg_prefix=None,excludes=[],event_params={}):
     _excludes = ['__init__','settings'] + excludes
     evs = set(os.path.splitext(it)[0] for it in os.listdir(event_path))
     evs = [it for it in evs if it not in _excludes]
@@ -167,7 +167,7 @@ def load_events(event_path=None,pkg_prefix=None,excludes=[],**kwargs):
                 )
             _ev = "{0}.{1}".format(pkg_prefix, ev)
             logger.info('load_event %s with params:%s' % (_ev,repr(kwargs)))
-            dispatch.register(importlib.import_module(_ev).__call__(**kwargs))
+            dispatch.register(importlib.import_module(_ev).__call__(**event_params))
         except Exception as err:
             logger.error("%s, skip module %s.%s" % (str(err),pkg_prefix,ev))
             import traceback
