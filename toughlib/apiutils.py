@@ -5,6 +5,7 @@ import json
 from hashlib import md5
 from toughlib import utils, httpclient
 from toughlib import logger
+from toughlib.storage import Storage
 
 
 def make_sign(api_secret, params=[]):
@@ -56,7 +57,7 @@ def make_error(api_secret, msg=None, enc_func=False):
 def parse_request(api_secret, reqbody, dec_func=False):
     """
         >>> parse_request("123456",'{"nonce": 1451122677, "msg": "helllo", "code": 0, "sign": "DB30F4D1112C20DFA736F65458F89C64"}')
-        {u'nonce': 1451122677, u'msg': u'helllo', u'code': 0, u'sign': u'DB30F4D1112C20DFA736F65458F89C64'}
+        <Storage {u'nonce': 1451122677, u'msg': u'helllo', u'code': 0, u'sign': u'DB30F4D1112C20DFA736F65458F89C64'}>
     """
     try:
         if callable(dec_func):
@@ -69,21 +70,21 @@ def parse_request(api_secret, reqbody, dec_func=False):
     if not check_sign(api_secret, req_msg):
         raise ValueError(u"message sign error")
 
-    return req_msg
+    return Storage(req_msg)
 
 def parse_form_request(api_secret, request):
     """
         >>> parse_form_request("123456",{"nonce": 1451122677, "msg": "helllo", "code": 0, "sign": "DB30F4D1112C20DFA736F65458F89C64"})
-        {'nonce': 1451122677, 'msg': 'helllo', 'code': 0, 'sign': 'DB30F4D1112C20DFA736F65458F89C64'}
+        <Storage {'nonce': 1451122677, 'msg': 'helllo', 'code': 0, 'sign': 'DB30F4D1112C20DFA736F65458F89C64'}>
     """
     _request = request
     if hasattr(request, "get_params"):
         _request = request.get_params()
 
-    if not check_sign(api_secret, request):
+    if not check_sign(api_secret, _request):
         raise ValueError(u"message sign error")
 
-    return request
+    return Storage(_request)
 
 
 def request(apiurl, data=None, **kwargs):
