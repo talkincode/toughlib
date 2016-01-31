@@ -6,9 +6,9 @@ import base64
 from sqlalchemy.sql import text as _sql
 from twisted.internet import reactor
 
-CACHE_SET_EVENT = 'dbcache_set'
-CACHE_DELETE_EVENT = 'dbcache_delete'
-CACHE_UPDATE_EVENT = 'dbcache_update'
+CACHE_SET_EVENT = 'cache_set'
+CACHE_DELETE_EVENT = 'cache_delete'
+CACHE_UPDATE_EVENT = 'cache_update'
 
 class CacheManager(object):
     def __init__(self, dbengine,cache_table='system_cache'):

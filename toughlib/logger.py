@@ -43,8 +43,7 @@ class Logger:
         self.syslog_level = config.syslog.level
         self.syslog_shost = config.syslog.shost
         self.formatter = logging.Formatter(
-            u'%(asctime)s {0} %(name)s %(levelname)-8s %(module)s -> %(funcName)s (%(lineno)d) %(message)s'.format(self.syslog_shost),
-            '%b %d %H:%M:%S', )
+            u'%(asctime)s {0} %(name)s %(levelname)-8s %(message)s'.format(self.syslog_shost),'%b %d %H:%M:%S', )
         self.level = string_to_level(self.syslog_level)
         if config.system.debug:
             self.level = string_to_level("DEBUG")
@@ -58,9 +57,7 @@ class Logger:
             self.syslogger.addHandler(handler)
         else:
             handler = logging.StreamHandler(sys.stderr)
-            formatter = logging.Formatter(
-            u'%(asctime)s %(levelname)-4s %(module)s -> %(funcName)s (%(lineno)d) %(message)s'.format(self.syslog_shost),
-            '%b %d %H:%M:%S', )
+            formatter = logging.Formatter(u'%(levelname)-4s %(message)s')
             handler.setFormatter(formatter)
             self.syslogger.addHandler(handler)
 

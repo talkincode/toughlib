@@ -65,13 +65,6 @@ aescipher = AESCipher()
 encrypt = aescipher.encrypt
 decrypt = aescipher.decrypt 
 
-
-
-def mk_sign(args=[]):
-    args.sort()
-    _argstr =  aescipher.ori_key + ''.join(args)
-    return hashlib.md5(_argstr).hexdigest()
-
 def update_tz(tz_val,default_val="CST-8"):
     try:
         os.environ["TZ"] = tz_val or default_val
