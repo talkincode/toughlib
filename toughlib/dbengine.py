@@ -17,6 +17,7 @@ class DBEngine(object):
         self.config = config
         self.dbtype = os.environ.get("DB_TYPE", self.config.database.dbtype)
         self.dburl = os.environ.get("DB_URL", self.config.database.dburl)
+        self.dbinit = os.environ.get("DB_INIT", 1)
         self.pool_size = kwargs.pop('pool_size',self.config.database.pool_size)
 
     def __call__(self):
@@ -35,7 +36,7 @@ class DBEngine(object):
                 self.dburl,
                 echo=bool(self.config.database.echo),
                 pool_size = int(self.pool_size),
-                isolation_level = int(ISOLATION_LEVEL.get(self.config.database.isolation_level, 1)),
+                isolation_level = int(ISOLATION_LEVEL.get(self.config.database.isolation_level, 'READ COMMITTED')),
                 pool_recycle=int(self.config.database.pool_recycle)
             )
         elif self.dbtype == 'sqlite':
