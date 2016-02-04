@@ -6,6 +6,7 @@ import socket
 import logging
 import logging.handlers
 from toughlib import dispatch
+from toughlib.utils import safeunicode
 from twisted.logger import Logger
 import functools
 
@@ -91,6 +92,8 @@ setup = functools.partial(dispatch.pub, EVENT_SETUP)
 
 
 def info(message,**kwargs):
+    if not isinstance(message, unicode):
+        message = safeunicode(message)
     if EVENT_INFO in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_INFO,message,**kwargs)
     else:
@@ -98,6 +101,8 @@ def info(message,**kwargs):
 
 
 def debug(message,**kwargs):
+    if not isinstance(message, unicode):
+        message = safeunicode(message)
     if EVENT_DEBUG in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_DEBUG,message,**kwargs)
     else:
@@ -105,6 +110,8 @@ def debug(message,**kwargs):
 
 
 def error(message,**kwargs):
+    if not isinstance(message, unicode):
+        message = safeunicode(message)
     if EVENT_ERROR in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_ERROR,message,**kwargs)
     else:
