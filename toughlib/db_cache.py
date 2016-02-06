@@ -79,7 +79,14 @@ class CacheManager(object):
             except:
                 import traceback
                 traceback.print_exc()
-        return raw_data and self.decode_data(raw_data) or None
+
+        try:
+            if raw_data:
+                return self.decode_data(raw_data)
+        except:
+            self.delete(key)
+        return None
+
 
 
     def event_cache_delete(self, key):
