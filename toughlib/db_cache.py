@@ -47,7 +47,7 @@ class CacheManager(object):
         if result:
             return result
         if fetchfunc:
-            expire = kwargs.pop('expire',600)
+            expire = kwargs.pop('expire',3600)
             result = fetchfunc(*args,**kwargs)
             if result:
                 self.set(key,result,expire=expire)

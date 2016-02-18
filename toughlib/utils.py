@@ -57,8 +57,7 @@ class AESCipher:
     def _pad(self, s):
         return s + (self.bs - len(s) % self.bs) * chr(self.bs - len(s) % self.bs)
 
-    @staticmethod
-    def _unpad(s):
+    def _unpad(self,s):
         return s[:-ord(s[len(s)-1:])]
 
 aescipher = AESCipher()
