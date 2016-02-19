@@ -12,7 +12,7 @@ class SendMail:
     def __init__(self, server='127.0.0.1', port=25, user=None, password=None,from_addr=None):
         self.smtp_server = server
         self.from_addr = from_addr
-        self.smtp_port = pport
+        self.smtp_port = port
         self.smtp_user = user
         self.smtp_pwd = password
 
