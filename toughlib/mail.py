@@ -17,7 +17,6 @@ class SendMail:
         self.smtp_pwd = password
 
     def send_mail(self, mailto, topic, content, **kwargs):
-        to = ["bob@gmail.com", "charlie@gmail.com"]
         message = MIMEText(content,'html', 'utf-8')
         message["Subject"] = Header(topic,'utf-8')
         message["From"] = Header("%s <%s>"%(fromaddr[:fromaddr.find('@')],fromaddr),'utf-8')
@@ -33,7 +32,7 @@ class SendMail:
 
 
 def send_mail(server='127.0.0.1', port=25, user=None, password=None, 
-                from_addr=None, mailto=mailto, topic=topic, content=content, **kwargs):
+                from_addr=None, mailto=None, topic=None, content=None, **kwargs):
     return SendMail(server,port,user,password,from_addr).send_mail(mailto, topic, content, **kwargs)
 
 
