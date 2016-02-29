@@ -296,6 +296,15 @@ def timecast(func):
         return result
     return warp
 
+def split_mline(src,wd=32,rstr='\r\n'):
+    _idx = 0
+    ss = []
+    for c in src:
+        if _idx > 0 and _idx%wd == 0:
+            ss.append(rstr)
+        ss.append(c)
+        _idx += 1
+    return ''.join(ss)
 
 
 if __name__ == '__main__':
