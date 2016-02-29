@@ -141,6 +141,10 @@ def get_currtime():
 
 def get_currdate():
     return datetime.datetime.now().strftime("%Y-%m-%d") 
+
+def datetime2msec(dtime_str):
+    _datetime =  datetime.datetime.strptime(dtime_str,"%Y-%m-%d %H:%M:%S")
+    return int(time.mktime(_datetime.timetuple()))
     
 def gen_backep_id():
     global _base_id
