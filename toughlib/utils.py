@@ -142,6 +142,9 @@ def get_currtime():
 def get_currdate():
     return datetime.datetime.now().strftime("%Y-%m-%d") 
 
+def get_datetime(second):
+    return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(second))
+
 def datetime2msec(dtime_str):
     _datetime =  datetime.datetime.strptime(dtime_str,"%Y-%m-%d %H:%M:%S")
     return int(time.mktime(_datetime.timetuple()))
