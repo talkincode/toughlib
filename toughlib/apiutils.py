@@ -6,6 +6,19 @@ from hashlib import md5
 from toughlib import utils, httpclient
 from toughlib import logger
 from toughlib.storage import Storage
+from collections import namedtuple
+
+ApiStatus = namedtuple('ApiStatus', 'code desc msg')  
+apistatus = Storage(
+    success = ApiStatus(code=0,desc='success',msg=u"处理成功"),
+    sign_err = ApiStatus(code=90001,desc='message sign error',msg=u"消息签名错误"),
+    parse_err = ApiStatus(code=90002,desc='param parse error',msg=u"参数解析失败"),
+    verify_err = ApiStatus(code=90003,desc='message verify error',msg=u"消息校验错误"),
+    timeout = ApiStatus(code=90004,desc='request timeout',msg=u"请求超时"),
+    limit_err = ApiStatus(code=90005,desc='api limit',msg=u"频率限制"),
+    server_err = ApiStatus(code=90006,desc='server process failure',msg=u"服务器处理失败"),
+    unknow = ApiStatus(code=99999,desc='unknow error',msg=u"未知错误")
+)
 
 
 def make_sign(api_secret, params=[]):
@@ -91,6 +104,7 @@ def request(apiurl, data=None, **kwargs):
     return httpclient.post(apiurl, data=data, **kwargs)
 
 if __name__ == "__main__":
+    print apistatus
     import doctest
     doctest.testmod()
 
