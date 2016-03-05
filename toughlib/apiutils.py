@@ -20,6 +20,11 @@ apistatus = Storage(
     unknow = ApiStatus(code=99999,desc='unknow error',msg=u"未知错误")
 )
 
+class SignError(Exception):
+    pass
+
+class ParseError(Exception):
+    pass
 
 def make_sign(api_secret, params=[]):
     """
@@ -81,10 +86,10 @@ def parse_request(api_secret, reqbody, dec_func=False):
         else:
             req_msg = json.loads(reqbody)
     except Exception as err:
-        raise ValueError(u"parse params error")
+        raise ParseError(u"parse params error")
 
     if not check_sign(api_secret, req_msg):
-        raise ValueError(u"message sign error")
+        raise SignError(u"message sign error")
 
     return Storage(req_msg)
 
@@ -94,7 +99,7 @@ def parse_form_request(api_secret, request):
         <Storage {'nonce': 1451122677, 'msg': 'helllo', 'code': 0, 'sign': 'DB30F4D1112C20DFA736F65458F89C64'}>
     """
     if not check_sign(api_secret, request):
-        raise ValueError(u"message sign error")
+        raise SignError(u"message sign error")
 
     return Storage(request)
 
