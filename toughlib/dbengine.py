@@ -59,5 +59,13 @@ class DBEngine(object):
                 pool_size = int(self.pool_size)
             )
 
-def get_engine(config):
-    return DBEngine(config)()
+def get_engine(config, pool_size=0):
+    if pool_size > 0 
+        return DBEngine(config,pool_size=pool_size)()
+    else:
+        return DBEngine(config)()
+
+
+
+
+
