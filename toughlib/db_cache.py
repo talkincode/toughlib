@@ -13,7 +13,8 @@ CACHE_UPDATE_EVENT = 'cache_update'
 
 class CacheManager(object):
     log = Logger()
-    def __init__(self, dbengine,cache_table='system_cache'):
+    def __init__(self, dbengine,cache_table='system_cache',cache_name="cache"):
+        self.cache_name = cache_name
         self.dbengine = dbengine
         self.cache_table = cache_table
         self.get_total = 0
@@ -30,7 +31,7 @@ class CacheManager(object):
         logstr = """
 
 ----------------------- cache stat ----------------------
-#  cache instance  id      : {0}
+#  cache name              : {0}
 #  visit cache total       : {1}
 #  add cache total         : {2}
 #  hit cache total         : {3}
@@ -39,7 +40,8 @@ class CacheManager(object):
 #  current db cache total  : {6}
 ---------------------------------------------------------
 
-""".format(id(self), self.get_total,self.set_total,self.hit_total,self.update_total,self.delete_total,self.count())
+""".format(self.cache_name, self.get_total,self.set_total,self.hit_total,
+        self.update_total,self.delete_total,self.count())
         self.log.info(logstr)
         reactor.callLater(60.0, self.print_hit_stat)
 
