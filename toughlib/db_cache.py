@@ -25,6 +25,8 @@ class CacheManager(object):
         self.print_hit_stat(first_delay=10)
 
     def print_hit_stat(self, first_delay=0):
+        if first_delay > 0:
+            reactor.callLater(first_delay, self.check_expire)
         logstr = """
 ----------------------- cache stat ----------------------
 #
