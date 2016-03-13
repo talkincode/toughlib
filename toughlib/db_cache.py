@@ -28,18 +28,20 @@ class CacheManager(object):
         if first_delay > 0:
             reactor.callLater(first_delay, self.check_expire)
         logstr = """
+
 ----------------------- cache stat ----------------------
-#
-#  visit cache total   : {0}
-#  add cache total     : {1}
-#  hit cache total     : {2}
-#  update cache total  : {3}
-#  delete cache total  : {4}
-#
+#  cache instance  id      : {0}
+#  visit cache total       : {1}
+#  add cache total         : {2}
+#  hit cache total         : {3}
+#  update cache total      : {4}
+#  delete cache total      : {5}
+#  current db cache total  : {6}
 ---------------------------------------------------------
-""".format(self.get_total,self.set_total,self.hit_total,self.update_total,self.delete_total)
+
+""".format(id(self), self.get_total,self.set_total,self.hit_total,self.update_total,self.delete_total,self.count())
         self.log.info(logstr)
-        reactor.callLater(60.0, self.check_expire)
+        reactor.callLater(60.0, self.print_hit_stat)
 
     def encode_data(self,data):
         return base64.b64encode(pickle.dumps(data, pickle.HIGHEST_PROTOCOL))
@@ -119,6 +121,15 @@ class CacheManager(object):
     def event_cache_delete(self, key):
         self.log.info("event: delete cache %s " % key)
         self.delete(key)
+
+    def count(self):
+        with self.dbengine.begin() as conn:
+            try:
+                cur = conn.execute(_sql("select count(_key) as count from %s " % self.cache_table))
+                return int(cur.fetchone()['count'])
+            except:
+                self.log.error("cache count error")
+                return 0
 
     def delete(self,key):
         self.delete_total += 1
