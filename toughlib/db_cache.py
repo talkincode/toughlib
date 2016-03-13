@@ -5,16 +5,39 @@ import functools
 import base64
 from sqlalchemy.sql import text as _sql
 from twisted.internet import reactor
+from twisted.logger import Logger
 
 CACHE_SET_EVENT = 'cache_set'
 CACHE_DELETE_EVENT = 'cache_delete'
 CACHE_UPDATE_EVENT = 'cache_update'
 
 class CacheManager(object):
+    log = Logger()
     def __init__(self, dbengine,cache_table='system_cache'):
         self.dbengine = dbengine
         self.cache_table = cache_table
+        self.get_total = 0
+        self.set_total = 0
+        self.hit_total = 0
+        self.update_total = 0
+        self.delete_total = 0
         self.check_expire(first_delay=10)
+        self.print_hit_stat(first_delay=10)
+
+    def print_hit_stat(self, first_delay=0):
+        logstr = """
+----------------------- cache stat ----------------------
+#
+#  visit cache total   : {0}
+#  add cache total     : {1}
+#  hit cache total     : {2}
+#  update cache total  : {3}
+#  delete cache total  : {4}
+#
+---------------------------------------------------------
+""".format(self.get_total,self.set_total,self.hit_total,self.update_total,self.delete_total)
+        self.log.info(logstr)
+        reactor.callLater(60.0, self.check_expire)
 
     def encode_data(self,data):
         return base64.b64encode(pickle.dumps(data, pickle.HIGHEST_PROTOCOL))
@@ -64,6 +87,7 @@ class CacheManager(object):
         reactor.callLater(120.0, self.check_expire)
 
     def get(self, key):
+        self.get_total += 1
         raw_data = None
         _del_func = self.delete
         with self.dbengine.begin() as conn:
@@ -71,6 +95,7 @@ class CacheManager(object):
                 cur = conn.execute(_sql("select _value, _time from %s where _key = :key " % self.cache_table),key=key)
                 _cache =  cur.fetchone()
                 if _cache:
+                    self.hit_total += 1
                     _time = int(_cache['_time'])
                     if _time > 0 and time.time() > _time:
                         reactor.callLater(0.01, _del_func, key,)
@@ -90,9 +115,11 @@ class CacheManager(object):
 
 
     def event_cache_delete(self, key):
+        self.log.info("event: delete cache %s " % key)
         self.delete(key)
 
     def delete(self,key):
+        self.delete_total += 1
         with self.dbengine.begin() as conn:
             try:
                 conn.execute(_sql("delete from %s where _key = :key " % self.cache_table),key=key)
@@ -101,9 +128,11 @@ class CacheManager(object):
                 traceback.print_exc()
 
     def event_cache_set(self, key, value, expire=0):
+        self.log.info("event: set cache %s " % key)
         self.set(key, value, expire)
 
     def set(self, key, value, expire=0):
+        self.set_total += 1
         raw_data = self.encode_data(value)
         with self.dbengine.begin() as conn:
             _time = expire>0 and (int(time.time()) + int(expire)) or 0
@@ -116,9 +145,11 @@ class CacheManager(object):
                     key=key,value=raw_data,time=_time)
                 
     def event_cache_update(self, key, value, expire=0):
+        self.log.info("event: update cache %s " % key)
         self.update(key, value, expire)
 
     def update(self, key, value, expire=0):
+        self.update_total += 1
         raw_data = self.encode_data(value)
         with self.dbengine.begin() as conn:
             _time = expire>0 and (int(time.time()) + int(expire)) or 0
