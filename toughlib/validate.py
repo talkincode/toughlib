@@ -3,6 +3,10 @@
 import time
 
 class ValidateCache(object):
+
+    def __init__(self, max_times=5):
+        self.max_times = max_times
+
     validates = {}
     def incr(self,mid,vid):
         key = "%s_%s"%(mid,vid)
@@ -30,6 +34,6 @@ class ValidateCache(object):
             del self.validates[key]
             return False
         else:
-            return self.validates[key][0] >= 5 
+            return self.validates[key][0] >= self.max_times
 
 vcache = ValidateCache() 
