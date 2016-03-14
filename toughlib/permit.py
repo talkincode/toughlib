@@ -9,10 +9,16 @@ from toughlib import dispatch,logger
 
 class Permit():
     """ 权限菜单管理
-    @TODO: ⚠注意，这个权限管理在多进程时可能会有数据一致性问题，不过现在展示不解决它
     """
-    routes = {}
-    handlers = {}
+
+    def __init__(self, parent=None):
+        if parent:
+            self.routes = parent.routes
+            self.handlers = parent.handlers
+        else:
+            self.routes = {}
+            self.handlers = {}
+
 
     def add_route(self, handle_cls, path, name, category, handle_params={}, is_menu=False, order=time.time(),
                   is_open=True, oem=False):
