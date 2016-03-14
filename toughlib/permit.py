@@ -29,6 +29,7 @@ class Permit():
             p.unbind_opr(opr_name)
             for path in rules:
                 p.bind_opr(opr_name, path)
+        return p
 
 
     def add_route(self, handle_cls, path, name, category, handle_params={}, is_menu=False, order=time.time(),
