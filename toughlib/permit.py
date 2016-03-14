@@ -11,6 +11,8 @@ class Permit():
     """ 权限菜单管理
     """
 
+    opr_cache = {}
+
     def __init__(self, parent=None):
         if parent:
             self.routes = parent.routes
@@ -18,6 +20,15 @@ class Permit():
         else:
             self.routes = {}
             self.handlers = {}
+
+    def fork(opr_name, opr_type=0,rules=[]):
+        p = Permit.opr_cache.setdefault(opr_name,Permit(self))
+        if opr_type == 0:
+            p.bind_super(opr_name)
+        else:    
+            p.unbind_opr(opr_name)
+            for path in rules:
+                p.bind_opr(opr_name, path)
 
 
     def add_route(self, handle_cls, path, name, category, handle_params={}, is_menu=False, order=time.time(),
