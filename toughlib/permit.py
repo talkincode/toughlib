@@ -21,7 +21,7 @@ class Permit():
             self.routes = {}
             self.handlers = {}
 
-    def fork(opr_name, opr_type=0,rules=[]):
+    def fork(self,opr_name, opr_type=0,rules=[]):
         p = Permit.opr_cache.setdefault(opr_name,Permit(self))
         if opr_type == 0:
             p.bind_super(opr_name)
