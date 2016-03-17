@@ -13,7 +13,7 @@ CACHE_UPDATE_EVENT = 'cache_update'
 
 class CacheManager(object):
     log = Logger()
-    def __init__(self, cache_config,cache_name="cache",errback=lambda e:e):
+    def __init__(self, cache_config,cache_name="cache":
         self.cache_name = cache_name
         self.cache_config = cache_config
         self.get_total = 0
@@ -31,7 +31,7 @@ class CacheManager(object):
 
     def print_hit_stat(self, first_delay=0):
         if first_delay > 0:
-            reactor.callLater(first_delay, self.check_expire)
+            reactor.callLater(first_delay, self.print_hit_stat)
         logstr = """
 
 ----------------------- cache stat ----------------------
