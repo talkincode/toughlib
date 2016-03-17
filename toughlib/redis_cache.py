@@ -29,25 +29,25 @@ class CacheManager(object):
 
 
 
-#     def print_hit_stat(self, first_delay=0):
-#         if first_delay > 0:
-#             reactor.callLater(first_delay, self.print_hit_stat)
-#         logstr = """
+    def print_hit_stat(self, first_delay=0):
+        if first_delay > 0:
+            reactor.callLater(first_delay, self.print_hit_stat)
+        logstr = """
 
-# ----------------------- cache stat ----------------------
-# #  cache name              : {0}
-# #  visit cache total       : {1}
-# #  add cache total         : {2}
-# #  hit cache total         : {3}
-# #  update cache total      : {4}
-# #  delete cache total      : {5}
-# #  current db cache total  : {6}
-# ---------------------------------------------------------
+----------------------- cache stat ----------------------
+#  cache name              : {0}
+#  visit cache total       : {1}
+#  add cache total         : {2}
+#  hit cache total         : {3}
+#  update cache total      : {4}
+#  delete cache total      : {5}
+#  current db cache total  : {6}
+---------------------------------------------------------
 
-# """.format(self.cache_name, self.get_total,self.set_total,self.hit_total,
-#         self.update_total,self.delete_total,self.count())
-#         self.log.info(logstr)
-#         reactor.callLater(60.0, self.print_hit_stat)
+""".format(self.cache_name, self.get_total,self.set_total,self.hit_total,
+        self.update_total,self.delete_total,self.count())
+        self.log.info(logstr)
+        reactor.callLater(60.0, self.print_hit_stat)
 
     def encode_data(self,data):
         return base64.b64encode(pickle.dumps(data, pickle.HIGHEST_PROTOCOL))
