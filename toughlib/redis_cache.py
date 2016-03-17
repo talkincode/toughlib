@@ -16,9 +16,8 @@ class CacheManager(object):
     def __init__(self, cache_config,cache_name="cache"):
         self.cache_name = cache_name
         self.cache_config = cache_config
-        self.redis = redis.StrictRedis(host=cache_config.host, 
-            port=cache_config.port, 
-            password=cache_config.get('passwd',None))
+        self.redis = redis.StrictRedis(host=cache_config.get('host'), 
+            port=cache_config.get("port"), password=cache_config.get('passwd'))
         self.get_total = 0
         self.set_total = 0
         self.hit_total = 0
