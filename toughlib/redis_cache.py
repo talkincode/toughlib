@@ -110,20 +110,20 @@ class CacheManager(object):
         self.delete_total += 1
         self.redis.delete(key)
 
-    def event_cache_set(self, key, value, expire=0):
+    def event_cache_set(self, key, value, expire=3600):
         self.log.info("event: set cache %s " % key)
         self.set(key, value, expire)
 
-    def set(self, key, value, expire=0):
+    def set(self, key, value, expire=3600):
         self.set_total += 1
         raw_data = self.encode_data(value)
         self.redis.setex(key,expire,raw_data)
      
-    def event_cache_update(self, key, value, expire=0):
+    def event_cache_update(self, key, value, expire=3600):
         self.log.info("event: update cache %s " % key)
         self.update(key, value, expire)
 
-    def update(self, key, value, expire=0):
+    def update(self, key, value, expire=3600):
         self.update_total += 1
         raw_data = self.encode_data(value)
         self.redis.setex(key,expire,raw_data)
