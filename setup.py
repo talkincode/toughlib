@@ -8,7 +8,7 @@ version = toughlib.__version__
 
 install_requires = [
     'six>=1.8.0',
-    'Twisted>=13.0.0',
+    'Twisted>=15.0.0',
     'SQLAlchemy',
     'treq',
     'cyclone',

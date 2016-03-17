@@ -4,7 +4,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+_trial_temp/
 # Distribution / packaging
 .Python
 env/

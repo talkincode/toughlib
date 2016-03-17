@@ -16,38 +16,38 @@ class CacheManager(object):
     def __init__(self, cache_config,cache_name="cache"):
         self.cache_name = cache_name
         self.cache_config = cache_config
+        self.redis = redis.StrictRedis(host=cache_config.host, 
+            port=cache_config.port, 
+            password=cache_config.get('passwd',None))
         self.get_total = 0
         self.set_total = 0
         self.hit_total = 0
         self.update_total = 0
         self.delete_total = 0
-        self.print_hit_stat(first_delay=10)
-        self.redis = redis.StrictRedis(host=cache_config.host, 
-            port=cache_config.port, 
-            password=cache_config.get('passwd',None))
+        # self.print_hit_stat(first_delay=10)
         self.log.info('redis client connected')
 
 
 
-    def print_hit_stat(self, first_delay=0):
-        if first_delay > 0:
-            reactor.callLater(first_delay, self.print_hit_stat)
-        logstr = """
+#     def print_hit_stat(self, first_delay=0):
+#         if first_delay > 0:
+#             reactor.callLater(first_delay, self.print_hit_stat)
+#         logstr = """
 
------------------------ cache stat ----------------------
-#  cache name              : {0}
-#  visit cache total       : {1}
-#  add cache total         : {2}
-#  hit cache total         : {3}
-#  update cache total      : {4}
-#  delete cache total      : {5}
-#  current db cache total  : {6}
----------------------------------------------------------
+# ----------------------- cache stat ----------------------
+# #  cache name              : {0}
+# #  visit cache total       : {1}
+# #  add cache total         : {2}
+# #  hit cache total         : {3}
+# #  update cache total      : {4}
+# #  delete cache total      : {5}
+# #  current db cache total  : {6}
+# ---------------------------------------------------------
 
-""".format(self.cache_name, self.get_total,self.set_total,self.hit_total,
-        self.update_total,self.delete_total,self.count())
-        self.log.info(logstr)
-        reactor.callLater(60.0, self.print_hit_stat)
+# """.format(self.cache_name, self.get_total,self.set_total,self.hit_total,
+#         self.update_total,self.delete_total,self.count())
+#         self.log.info(logstr)
+#         reactor.callLater(60.0, self.print_hit_stat)
 
     def encode_data(self,data):
         return base64.b64encode(pickle.dumps(data, pickle.HIGHEST_PROTOCOL))
@@ -118,7 +118,7 @@ class CacheManager(object):
     def set(self, key, value, expire=0):
         self.set_total += 1
         raw_data = self.encode_data(value)
-        self.redis.setex(key,value,expire)
+        self.redis.setex(key,expire,raw_data)
      
     def event_cache_update(self, key, value, expire=0):
         self.log.info("event: update cache %s " % key)
@@ -127,7 +127,7 @@ class CacheManager(object):
     def update(self, key, value, expire=0):
         self.update_total += 1
         raw_data = self.encode_data(value)
-        self.redis.setex(key,value,expire)
+        self.redis.setex(key,expire,raw_data)
 
 if __name__ == '__main__':
     pass
