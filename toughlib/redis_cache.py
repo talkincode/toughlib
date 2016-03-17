@@ -13,7 +13,7 @@ CACHE_UPDATE_EVENT = 'cache_update'
 
 class CacheManager(object):
     log = Logger()
-    def __init__(self, cache_config,cache_name="cache":
+    def __init__(self, cache_config,cache_name="cache"):
         self.cache_name = cache_name
         self.cache_config = cache_config
         self.get_total = 0
@@ -129,6 +129,7 @@ class CacheManager(object):
         raw_data = self.encode_data(value)
         self.redis.setex(key,value,expire)
 
-
+if __name__ == '__main__':
+    pass
 
 
