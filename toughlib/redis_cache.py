@@ -21,6 +21,7 @@ class CacheManager(object):
         self.get_total = 0
         self.set_total = 0
         self.hit_total = 0
+        self.miss_total = 0
         self.update_total = 0
         self.delete_total = 0
         # self.print_hit_stat(first_delay=10)
@@ -38,12 +39,13 @@ class CacheManager(object):
 #  visit cache total       : {1}
 #  add cache total         : {2}
 #  hit cache total         : {3}
-#  update cache total      : {4}
-#  delete cache total      : {5}
-#  current db cache total  : {6}
+#  miss cache total        : {4}
+#  update cache total      : {5}
+#  delete cache total      : {6}
+#  current db cache total  : {7}
 ---------------------------------------------------------
 
-""".format(self.cache_name, self.get_total,self.set_total,self.hit_total,
+""".format(self.cache_name, self.get_total,self.set_total,self.hit_total,self.miss_total,
         self.update_total,self.delete_total,self.count())
         self.log.info(logstr)
         reactor.callLater(60.0, self.print_hit_stat)
@@ -78,6 +80,7 @@ class CacheManager(object):
         result = self.get(key)
         if result:
             return result
+        self.miss_total += 1
         if fetchfunc:
             expire = kwargs.pop('expire',3600)
             result = fetchfunc(*args,**kwargs)
@@ -93,6 +96,8 @@ class CacheManager(object):
             if raw_data:
                 self.hit_total += 1
                 return self.decode_data(raw_data)
+            else:
+                self.miss_total += 1
         except:
             self.delete(key)
         return None
