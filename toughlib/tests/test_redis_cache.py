@@ -18,3 +18,12 @@ class SetGetTestCase(unittest.TestCase):
         _get = self.cache.get('test:tkey') 
         print _get
         assert _get == "123456"
+
+    def test_aget(self):
+
+        def fetch_result():
+            return "b"*1024
+
+        print self.cache.aget("test:aget",fetch_result)
+        assert self.cache.get("test:aget") == "b"*1024
+        assert self.cache.aget("test:aget1",fetch_result,expire=3600) == "b"*1024
