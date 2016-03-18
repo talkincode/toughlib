@@ -71,7 +71,7 @@ class SessionManager(object):
                 else:
                     return {}
         except:
-            self._delete(key)
+            self._delete(session_id)
         return {}
         
     def get(self, request_handler = None):
