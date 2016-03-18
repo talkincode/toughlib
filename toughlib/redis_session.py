@@ -53,27 +53,27 @@ class SessionManager(object):
         except:
             self._delete(key)
 
-    def _raw_set(self, key, raw_value, timeout,**kwargs):
-        self.redis.setex(key,timeout,raw_value)
+    def _raw_set(self, key, value, timeout,**kwargs):
+        raw_data = self.encode_data(value)
+        self.redis.setex(key,timeout,raw_data)
 
     def _delete(self, key):
         self.redis.delete(key)
 
-    def _raw_replace(self, key, raw_value, timeout,**kwargs):
-        self._raw_set(key, raw_value, timeout, **kwargs)
-
     def _fetch(self, session_id):
         try:
-            session_data = raw_data = self._raw_get(session_id)
+            raw_data = self._raw_get(session_id)
             if raw_data != None:
-                self._raw_replace(session_id, raw_data, self.session_timeout)
+                self._raw_set(session_id, raw_data, self.session_timeout)
                 session_data = self.decode_data(raw_data)
-            if type(session_data) == type({}):
-                return session_data
-            else:
-                return {}
-        except IOError:
-            return {}
+                if type(session_data) == type({}):
+                    return session_data
+                else:
+                    return {}
+        except:
+            self.log.error("fetch session error")
+            self._delete(key)
+        return {}
         
     def get(self, request_handler = None):
         
@@ -107,7 +107,7 @@ class SessionManager(object):
     def set(self, request_handler, session):
         request_handler.set_secure_cookie("session_id", session.session_id)
         request_handler.set_secure_cookie("verification", session.hmac_key)
-        session_data = self.encode_data(dict(session.items()))
+        session_data = dict(session.items())
         self._raw_set(session.session_id, session_data, self.session_timeout)   
 
     def clear(self, request_handler, session):
