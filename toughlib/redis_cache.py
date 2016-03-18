@@ -81,6 +81,7 @@ class CacheManager(object):
         if result:
             return result
         self.miss_total += 1
+        self.log.debug('miss key %s' % key)
         if fetchfunc:
             expire = kwargs.pop('expire',3600)
             result = fetchfunc(*args,**kwargs)
@@ -98,6 +99,7 @@ class CacheManager(object):
                 return self.decode_data(raw_data)
             else:
                 self.miss_total += 1
+                self.log.debug('miss key %s' % key)
         except:
             self.delete(key)
         return None
