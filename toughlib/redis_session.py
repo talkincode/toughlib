@@ -71,7 +71,6 @@ class SessionManager(object):
                 else:
                     return {}
         except:
-            self.log.error("fetch session error")
             self._delete(key)
         return {}
         
