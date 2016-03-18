@@ -50,15 +50,14 @@ class SessionManager(object):
         raw_data = self.redis.get(key)
         return raw_data and self.decode_data(raw_data) or None
 
-    def _raw_set(self, key, value, timeout,**kwargs):
-        _raw_data = self.encode_data(value)
-        self.redis.setex(key,timeout,_raw_data)
+    def _raw_set(self, key, raw_value, timeout,**kwargs):
+        self.redis.setex(key,timeout,raw_value)
 
     def _delete(self, key):
         self.redis.delete(key)
 
-    def _raw_replace(self, key, value, timeout,**kwargs):
-        self._raw_set(key, value, timeout, **kwargs)
+    def _raw_replace(self, key, raw_value, timeout,**kwargs):
+        self._raw_set(key, raw_value, timeout, **kwargs)
 
     def _fetch(self, session_id):
         try:
@@ -105,7 +104,7 @@ class SessionManager(object):
     def set(self, request_handler, session):
         request_handler.set_secure_cookie("session_id", session.session_id)
         request_handler.set_secure_cookie("verification", session.hmac_key)
-        session_data = dict(session.items())
+        session_data = self.encode_data(dict(session.items()))
         self._raw_set(session.session_id, session_data, self.session_timeout)   
 
     def clear(self, request_handler, session):
