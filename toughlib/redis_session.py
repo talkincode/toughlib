@@ -47,8 +47,11 @@ class SessionManager(object):
         return pickle.loads(base64.b64decode(raw_data))
 
     def _raw_get(self, key, **kwargs):
-        raw_data = self.redis.get(key)
-        return raw_data and self.decode_data(raw_data) or None
+        try:
+            raw_data = self.redis.get(key)
+            return raw_data and self.decode_data(raw_data) or None
+        except:
+            self._delete(key)
 
     def _raw_set(self, key, raw_value, timeout,**kwargs):
         self.redis.setex(key,timeout,raw_value)
