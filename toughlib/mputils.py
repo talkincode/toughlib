@@ -14,16 +14,16 @@ class MPProtocol(protocol.ProcessProtocol):
             (self.name, self.parent_id, self.transport.pid))
 
     def outReceived(self, data):
-        self.log.info(data)
+        self.log.info(data.strip())
 
     def errReceived(self, data):
-        self.log.error(data)
+        self.log.error(data.strip())
 
     def processExited(self, reason):
-        self.log.info("%s %s exit, status %s" % (self.name, self.transport.pid, reason.value.exitCode)) 
+        self.log.info("%s exit, status %s" % (self.name, reason.value.exitCode)) 
 
     def processEnded(self, reason):
-        self.log.info("%s %s ended, status %s" % (self.name, self.transport.pid, reason.value.exitCode)) 
+        self.log.info("%s ended, status %s" % (self.name, reason.value.exitCode)) 
 
 class MP:
 
