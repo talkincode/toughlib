@@ -38,7 +38,7 @@ class SimpleLogger:
         self.setup(config)
 
     def setup(self, config):
-        self.level = string_to_level(self.syslog_level)
+        self.level = string_to_level(config.syslog.level)
         if config.system.debug:
             self.level = string_to_level("DEBUG")
 
