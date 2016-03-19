@@ -55,6 +55,8 @@ class SimpleLogger:
         self.warning = self.log.warning
         self.error = self.log.error
         self.critical = self.log.critical
+        self.msg = self.log.info
+        self.err = self.log.error
 
     def event_syslog_setup(self,config):
         self.setup(config)
