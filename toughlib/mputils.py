@@ -4,17 +4,19 @@ import os
 
 class MPProtocol(protocol.ProcessProtocol):
     
-    def __init__(self,name,log):
+    def __init__(self,name,log,verb=False)):
         self.parent_id = os.getpid()
         self.name = name
         self.log = log
+        self.verb = verb
 
     def connectionMade(self):
         self.log.info("%s created! master pid - %s, worker pid - %s" % \
             (self.name, self.parent_id, self.transport.pid))
 
     def outReceived(self, data):
-        self.log.info(data.strip())
+        if self.verb:
+            self.log.info(data.strip())
 
     def errReceived(self, data):
         self.log.error(data.strip())
@@ -27,12 +29,13 @@ class MPProtocol(protocol.ProcessProtocol):
 
 class MP:
 
-    def __init__(self,log):
+    def __init__(self,log,verb=False):
         self.log = log
         self.procs = {}
+        self.verb = verb
 
     def spawn(self,name, executable, args=(), env={}, path=None, uid=None, gid=None, usePTY=0, childFDs=None):
-        pp = MPProtocol(name,self.log)
+        pp = MPProtocol(name,self.log,self.verb)
         ps = self.procs.setdefault(name,[])
         ps.append(pp)
         reactor.spawnProcess(pp,executable, args=args, path=path, env=env,
