@@ -4,7 +4,7 @@ import os
 
 class MPProtocol(protocol.ProcessProtocol):
     
-    def __init__(self,name,log,verb=False)):
+    def __init__(self,name,log,verb=False):
         self.parent_id = os.getpid()
         self.name = name
         self.log = log
