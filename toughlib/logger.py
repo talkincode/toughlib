@@ -45,7 +45,7 @@ class SimpleLogger:
         self.log = logging.getLogger(self.name)
         self.log.setLevel(self.level)
 
-        handler = logging.StreamHandler(sys.stderr)
+        handler = logging.StreamHandler(sys.stdout)
         formatter = logging.Formatter(u'%(message)s')
         handler.setFormatter(formatter)
         self.log.addHandler(handler)
