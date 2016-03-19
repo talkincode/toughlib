@@ -31,10 +31,53 @@ def string_to_level(log_level):
         return logging.DEBUG
     return logging.NOTSET
 
+class SimpleLogger:
+
+    def __init__(self,config, name="toughstruct"):
+        self.name = name
+        self.setup(config)
+
+    def setup(self, config):
+        self.level = string_to_level(self.syslog_level)
+        if config.system.debug:
+            self.level = string_to_level("DEBUG")
+
+        self.log = logging.getLogger(self.name)
+        self.log.setLevel(self.level)
+
+        handler = logging.StreamHandler(sys.stderr)
+        formatter = logging.Formatter(u'%(message)s')
+        handler.setFormatter(formatter)
+        self.log.addHandler(handler)
+
+        self.info = self.log.info
+        self.debug = self.log.debug
+        self.warning = self.log.warning
+        self.error = self.log.error
+        self.critical = self.log.critical
+        self.log = self.log.log
+        self.msg = self.log.info
+        self.err = self.log.error
+
+    def event_syslog_setup(self,config):
+        self.setup(config)
+
+    def event_syslog_info(self, msg):
+        self.info(msg)
+
+    def event_syslog_debug(self, msg):
+        self.debug(msg)
+
+    def event_syslog_error(self, msg):
+        self.error(msg)
+
+    def event_syslog_exception(self, err):
+        self.log.exception(err)        
 
 class Logger:
 
-    def __init__(self,config):
+    def __init__(self,config, name="toughstruct"):
+        self.name = name
         self.setup(config)
 
     def setup(self, config):
@@ -49,7 +92,7 @@ class Logger:
         if config.system.debug:
             self.level = string_to_level("DEBUG")
 
-        self.syslogger = logging.getLogger('toughstruct')
+        self.syslogger = logging.getLogger(self.name)
         self.syslogger.setLevel(self.level)
 
         if self.syslog_enable and self.syslog_server:
