@@ -1,6 +1,6 @@
 from twisted.internet import protocol
 from twisted.internet import reactor
-import os
+import os,signal
 
 class MPProtocol(protocol.ProcessProtocol):
     
@@ -44,7 +44,8 @@ class MP:
     def kill(self,name):
         for pp in self.procs.get(name,[]):
             try:
-                pp.transport.signalProcess('KILL')
+                # pp.transport.signalProcess('KILL')
+                os.kill(pp.transport.pid,signal.SIGKILL)
             except:
                 pass
 
