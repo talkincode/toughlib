@@ -32,7 +32,7 @@ class MP:
         self.procs = {}
 
     def spawn(self,name, executable, args=(), env={}, path=None, uid=None, gid=None, usePTY=0, childFDs=None):
-        pp = MPProtocol(name,log)
+        pp = MPProtocol(name,self.log)
         ps = self.procs.setdefault(name,[])
         ps.append(pp)
         reactor.spawnProcess(pp,executable, args=args, path=path, env=env,
