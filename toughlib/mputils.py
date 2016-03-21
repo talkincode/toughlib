@@ -44,7 +44,7 @@ class MP:
     def kill(self,name):
         for pp in self.procs.get(name,[]):
             try:
-                pp.transport.signalProcess('KILL')
+                pp.transport.signalProcess('TERM')
             except:
                 pass
 
