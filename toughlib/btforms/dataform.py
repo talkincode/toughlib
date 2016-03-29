@@ -26,10 +26,7 @@ class Form(object):
         source = source or kw
         out = True
         for i in self.inputs:
-            if i.name in source:
-                v = attrget(source, i.name)
-            else:
-                v = i.value
+            v = attrget(source, i.name,i.value)
             if _validate:
                 out = i.validate(v) and out
             else:
