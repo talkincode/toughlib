@@ -18,8 +18,7 @@ class EventDispatcher:
 
     def sub(self, name, func):
         self.callbacks.setdefault(name, []).append(func)
-        self.log.info('register event %s --> %s' % (
-            name, "{0}:{1}".format(func.__name__,func.__doc__)))
+        self.log.info('register event %s %s' % (name,(func.__doc__ or ''))
 
     def register(self, obj):
         d = {}
