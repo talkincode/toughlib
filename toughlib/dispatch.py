@@ -2,6 +2,7 @@
 # coding=utf-8
 import os
 import types
+import importlib
 from twisted.internet.threads import deferToThread
 from twisted.python import reflect
 from twisted.internet import defer
