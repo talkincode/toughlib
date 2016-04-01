@@ -13,8 +13,9 @@ CACHE_UPDATE_EVENT = 'cache_update'
 
 class CacheManager(object):
     log = Logger()
-    def __init__(self, cache_config,cache_name="cache"):
+    def __init__(self, cache_config,cache_name="cache",stattimes=300):
         self.cache_name = cache_name
+        self.stattimes = stattimes
         self.cache_config = cache_config
         self.redis = redis.StrictRedis(host=cache_config.get('host'), 
             port=cache_config.get("port"), password=cache_config.get('passwd'))
@@ -50,7 +51,7 @@ class CacheManager(object):
 """.format(self.cache_name, self.get_total,self.set_total,self.hit_total,self.miss_total,
         self.update_total,self.delete_total,self.count())
         self.log.info(logstr)
-        reactor.callLater(60.0, self.print_hit_stat)
+        reactor.callLater(self.stattimes, self.print_hit_stat)
 
     def encode_data(self,data):
         return base64.b64encode(pickle.dumps(data, pickle.HIGHEST_PROTOCOL))
