@@ -122,7 +122,7 @@ class Permit():
     def match(self, opr, path):
         """ 检查操作员是否匹配资源
         """
-        _url = urlparse.urlparse(url)
+        _url = urlparse.urlparse(path)
         if not _url.path or not opr:
             return False
         if _url.path not in self.routes:
