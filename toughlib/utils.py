@@ -16,6 +16,7 @@ import uuid
 import json
 import functools
 import logging
+import urlparse
 
 random_generator = random.SystemRandom()
 

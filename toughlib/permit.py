@@ -6,6 +6,7 @@ import importlib
 from cyclone.web import RequestHandler
 from cyclone.websocket import WebSocketHandler
 from toughlib import dispatch,logger
+import urlparse
 
 class Permit():
     """ 权限菜单管理
@@ -121,11 +122,12 @@ class Permit():
     def match(self, opr, path):
         """ 检查操作员是否匹配资源
         """
-        if not path or not opr:
+        _url = urlparse.urlparse(path)
+        if not _url.path or not opr:
             return False
-        if path not in self.routes:
+        if _url.path not in self.routes:
             return False
-        return opr in self.routes[path]['oprs']
+        return opr in self.routes[_url.path]['oprs']
 
     def route(self, url_pattern, menuname=None, category=None, is_menu=False, order=0, is_open=True,oem=False):
         selfobj = self
