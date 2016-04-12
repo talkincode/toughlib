@@ -66,7 +66,7 @@ class SessionManager(object):
                 else:
                     return {}
         except:
-            print "delete key %s" % key
+            print "delete key %s" % session_id
             self._delete(session_id)
         return {}
         
