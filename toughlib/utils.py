@@ -46,7 +46,7 @@ class AESCipher:
         self.key = hashlib.sha256(key.encode()).digest()
 
     def encrypt(self, raw):
-        is_encrypt = is_pwd_encrypt()
+        is_encrypt = self.is_pwd_encrypt()
         if not is_encrypt:
             return raw
 
@@ -57,7 +57,7 @@ class AESCipher:
         return base64.b64encode(iv + cipher.encrypt(raw))
 
     def decrypt(self, enc):
-        is_encrypt = is_pwd_encrypt()
+        is_encrypt = self.is_pwd_encrypt()
         if not is_encrypt:
             return enc
             
