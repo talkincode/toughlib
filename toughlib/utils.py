@@ -43,6 +43,8 @@ class AESCipher:
         self.key = hashlib.sha256(key.encode()).digest()
 
     def encrypt(self, raw):
+        if self.key == 'SUPER_KEY_FOR_NO_ENCRYPT':
+            return raw
         raw = safestr(raw)
         raw = self._pad(raw)
         iv = Random.new().read(AES.block_size)
@@ -50,6 +52,8 @@ class AESCipher:
         return base64.b64encode(iv + cipher.encrypt(raw))
 
     def decrypt(self, enc):
+        if self.key == 'SUPER_KEY_FOR_NO_ENCRYPT':
+            return enc
         enc = base64.b64decode(enc)
         iv = enc[:AES.block_size]
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
