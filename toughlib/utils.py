@@ -38,7 +38,7 @@ class AESCipher:
         if key:self.setup(key)
 
     def is_pwd_encrypt(self):
-        os.environ.get("OPEN_PASSWORD_ENCRYPTION")
+        os.environ.get("CLOSE_PASSWORD_ENCRYPTION")
 
     def setup(self, key): 
         self.bs = 32
@@ -47,7 +47,7 @@ class AESCipher:
 
     def encrypt(self, raw):
         is_encrypt = self.is_pwd_encrypt()
-        if not is_encrypt:
+        if is_encrypt:
             return raw
 
         raw = safestr(raw)
@@ -58,7 +58,7 @@ class AESCipher:
 
     def decrypt(self, enc):
         is_encrypt = self.is_pwd_encrypt()
-        if not is_encrypt:
+        if is_encrypt:
             return enc
             
         enc = base64.b64decode(enc)
