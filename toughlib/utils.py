@@ -37,7 +37,7 @@ class AESCipher:
     def __init__(self,key=None):
         if key:self.setup(key)
 
-    def is_pwd_encrypt():
+    def is_pwd_encrypt(self):
         os.environ.get("OPEN_PASSWORD_ENCRYPTION")
 
     def setup(self, key): 
