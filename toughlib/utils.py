@@ -38,7 +38,8 @@ class AESCipher:
         if key:self.setup(key)
 
     def is_pwd_encrypt(self):
-        return os.environ.get("CLOSE_PASSWORD_ENCRYPTION")
+        return 'close'
+        #return os.environ.get("CLOSE_PASSWORD_ENCRYPTION")
 
     def setup(self, key): 
         self.bs = 32
