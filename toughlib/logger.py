@@ -7,7 +7,7 @@ import logging
 import logging.handlers
 from toughlib import dispatch
 from toughlib.utils import safeunicode
-from  twisted.python import log as txlog
+from twisted.python import log as txlog
 import functools
 
 EVENT_INFO = 'syslog_info'
