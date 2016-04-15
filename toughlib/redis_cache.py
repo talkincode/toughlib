@@ -93,8 +93,7 @@ class CacheManager(object):
         elif fetchfunc:
             expire = kwargs.pop('expire',3600)
             result = fetchfunc(*args,**kwargs)
-            if result:
-                self.set(key,result,expire=expire)
+            self.set(key,result,expire=expire)
             return result
 
     def exists(self, key):
