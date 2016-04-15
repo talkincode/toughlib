@@ -7,7 +7,7 @@ import logging
 import logging.handlers
 from toughlib import dispatch
 from toughlib.utils import safeunicode
-from twisted.logger import Logger
+from  twisted.python import log as txlog
 import functools
 
 EVENT_INFO = 'syslog_info'
@@ -16,7 +16,10 @@ EVENT_ERROR = 'syslog_error'
 EVENT_EXCEPTION = 'syslog_exception'
 EVENT_SETUP = 'syslog_setup'
 
-__default_logger_ = Logger()
+
+default_log = logging.getLogger('toughlogger')
+default_log.setLevel(logging.DEBUG)
+
 
 def string_to_level(log_level):
     if log_level == "CRITICAL":
@@ -73,6 +76,16 @@ class SimpleLogger:
     def event_syslog_exception(self, err):
         self.log.exception(err)        
 
+    def emit(self, eventDict):
+        text = txlog.textFromEventDict(eventDict)
+        if text is None:
+            return
+        if eventDict['isError'] and 'failure' in eventDict:
+            self.error(text)
+        else:
+            self.info(text)
+
+
 class Logger:
 
     def __init__(self,config, name="toughstruct"):
@@ -128,6 +141,15 @@ class Logger:
     def event_syslog_exception(self, err):
         self.syslogger.exception(err)
 
+    def emit(self, eventDict):
+        text = txlog.textFromEventDict(eventDict)
+        if text is None:
+            return
+        if eventDict['isError'] and 'failure' in eventDict:
+            self.error(text)
+        else:
+            self.info(text)
+
 
 setup = functools.partial(dispatch.pub, EVENT_SETUP) 
 
@@ -139,7 +161,7 @@ def info(message,**kwargs):
     if EVENT_INFO in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_INFO,message,**kwargs)
     else:
-        __default_logger_.info(message)
+        default_log.info(message)
 
 
 def debug(message,**kwargs):
@@ -148,7 +170,7 @@ def debug(message,**kwargs):
     if EVENT_DEBUG in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_DEBUG,message,**kwargs)
     else:
-        __default_logger_.debug(message)
+        default_log.debug(message)
 
 
 def error(message,**kwargs):
@@ -157,7 +179,7 @@ def error(message,**kwargs):
     if EVENT_ERROR in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_ERROR,message,**kwargs)
     else:
-        __default_logger_.error(message)
+        default_log.error(message)
 
 
 exception = functools.partial(dispatch.pub, EVENT_EXCEPTION)
