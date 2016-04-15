@@ -37,12 +37,20 @@ class AESCipher:
     def __init__(self,key=None):
         if key:self.setup(key)
 
+    def is_pwd_encrypt(self):
+        print os.environ.get("CLOSE_PASSWORD_ENCRYPTION")
+        return os.environ.get("CLOSE_PASSWORD_ENCRYPTION")
+
     def setup(self, key): 
         self.bs = 32
         self.ori_key = key
         self.key = hashlib.sha256(key.encode()).digest()
 
     def encrypt(self, raw):
+        is_encrypt = self.is_pwd_encrypt()
+        if is_encrypt:
+            return raw
+
         raw = safestr(raw)
         raw = self._pad(raw)
         iv = Random.new().read(AES.block_size)
@@ -50,6 +58,10 @@ class AESCipher:
         return base64.b64encode(iv + cipher.encrypt(raw))
 
     def decrypt(self, enc):
+        is_encrypt = self.is_pwd_encrypt()
+        if is_encrypt:
+            return enc
+            
         enc = base64.b64decode(enc)
         iv = enc[:AES.block_size]
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
