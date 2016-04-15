@@ -83,18 +83,22 @@ class CacheManager(object):
         return func_warp1
 
     def aget(self, key, fetchfunc, *args, **kwargs):
-        result = self.get(key)
-        if result:
-            return result
-        self.miss_total += 1
-        self.log.debug('miss key %s' % key)
-        if fetchfunc:
+        if self.redis.exists(key):
+            result = self.get(key)
+            if result:
+                return result
+            else:
+                self.miss_total += 1
+                self.log.debug('miss key %s' % key)
+        elif fetchfunc:
             expire = kwargs.pop('expire',3600)
             result = fetchfunc(*args,**kwargs)
             if result:
                 self.set(key,result,expire=expire)
             return result
 
+    def exists(self, key):
+        return self.redis.exists(key)
 
     def get(self, key):
         self.get_total += 1
