@@ -101,7 +101,7 @@ class DBBackup:
                             continue
                         ctable = table_defines[obj['table']]
                         print "delete from %s"%ctable
-                        db.execute("delete from %s"%ctable
+                        db.execute("delete from %s"%ctable)
                         print 'insert datas into %s'%ctable
                         objs =  obj['data']
                         if len(objs) < 500:
