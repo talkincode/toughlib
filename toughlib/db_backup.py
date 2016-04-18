@@ -109,7 +109,7 @@ class DBBackup:
                                 if 'member_id' in o:
                                     o['customer_id'] = o['member_id']
                                     del o['member_id']
-                            if objs:db.execute(metadata.tables[ctable].insert().values(objs))
+                            if objs:db.execute(self.metadata.tables[ctable].insert().values(objs))
                         else:
                             while len(objs) > 0:
                                 _tmp_pbjs = objs[:500]
@@ -118,7 +118,7 @@ class DBBackup:
                                     if 'member_id' in o:
                                         o['customer_id'] = o['member_id']
                                         del o['member_id']
-                                db.execute(metadata.tables[ctable].insert().values(_tmp_pbjs))
+                                db.execute(self.metadata.tables[ctable].insert().values(_tmp_pbjs))
                             
                         # db.execute("commit;")
                     except:
