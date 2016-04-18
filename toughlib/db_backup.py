@@ -73,6 +73,60 @@ class DBBackup:
 
                 cache_datas.clear()
 
+    def restoredbv1(self,restorefs):
+        if not os.path.exists(restorefs):
+            print 'backup file not exists'
+            return
+
+        table_defines = {
+            'slc_node' : 'tr_node',
+            'slc_operator' : 'tr_operator',
+            'slc_operator_nodes' : 'tr_operator_nodes',
+            'slc_operator_rule' : 'tr_operator_rule',
+            'slc_param' : 'tr_param',
+            'slc_rad_bas' : 'tr_bas',
+            'slc_member' : 'tr_customer',
+            'slc_member_order' : 'tr_customer_order',
+            'slc_rad_account' : 'tr_account',
+            'slc_rad_product' : 'slc_product',
+            'slc_rad_product_attr' : 'slc_product_attr',
+        }
+
+        with self.dbengine.begin() as db:
+            with gzip.open(restorefs,'rb') as rfs:
+                for line in rfs:
+                    try:
+                        obj = json.loads(line)
+                        if obj['table'] not in table_defines:
+                            continue
+                        ctable = table_defines[obj['table']]
+                        print "delete from %s"%ctable
+                        db.execute("delete from %s"%ctable
+                        print 'insert datas into %s'%ctable
+                        objs =  obj['data']
+                        if len(objs) < 500:
+                            for o in objs:
+                                if 'member_id' in o:
+                                    o['customer_id'] = o['member_id']
+                                    del o['member_id']
+                            if objs:db.execute(metadata.tables[ctable].insert().values(objs))
+                        else:
+                            while len(objs) > 0:
+                                _tmp_pbjs = objs[:500]
+                                objs = objs[500:]
+                                for o in objs:
+                                    if 'member_id' in o:
+                                        o['customer_id'] = o['member_id']
+                                        del o['member_id']
+                                db.execute(metadata.tables[ctable].insert().values(_tmp_pbjs))
+                            
+                        # db.execute("commit;")
+                    except:
+                        print 'error data %s ...'%line[:128] 
+                        import traceback
+                        traceback.print_exc()
+
+
 if __name__ == '__main__':
     pass
 
