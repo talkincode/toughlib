@@ -107,7 +107,11 @@ class DBBackup:
                             for o in objs:
                                 if 'member_id' in o:
                                     o['customer_id'] = o['member_id']
+                                    o['customer_name'] = o['member_name']
+                                    o['customer_desc'] = o['member_desc']
                                     del o['member_id']
+                                    del o['member_name']
+                                    del o['member_desc']
                             if objs:db.execute(self.metadata.tables[ctable].insert().values(objs))
                         else:
                             while len(objs) > 0:
@@ -116,7 +120,11 @@ class DBBackup:
                                 for o in objs:
                                     if 'member_id' in o:
                                         o['customer_id'] = o['member_id']
+                                        o['customer_name'] = o['member_name']
+                                        o['customer_desc'] = o['member_desc']
                                         del o['member_id']
+                                        del o['member_name']
+                                        del o['member_desc']
                                 db.execute(self.metadata.tables[ctable].insert().values(_tmp_pbjs))
                             
                         # db.execute("commit;")
