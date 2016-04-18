@@ -87,8 +87,8 @@ class DBBackup:
             'slc_member' : 'tr_customer',
             'slc_member_order' : 'tr_customer_order',
             'slc_rad_account' : 'tr_account',
-            'slc_rad_product' : 'slc_product',
-            'slc_rad_product_attr' : 'slc_product_attr',
+            'slc_rad_product' : 'tr_product',
+            'slc_rad_product_attr' : 'tr_product_attr',
         }
 
         with self.dbengine.begin() as db:
