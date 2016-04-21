@@ -94,14 +94,16 @@ class DBBackup:
             with gzip.open(restorefs,'rb') as rfs:
                 for line in rfs:
                     for t in table_defines:
-                        if t not in line[:100]:
+                        if t not in line:
                             continue
                     line = line.replace('member_id','customer_id')
                     line = line.replace('member_name','customer_name')
                     line = line.replace('member_desc','customer_desc')
                     try:
                         obj = json.loads(line)
-                        ctable = table_defines[obj['table']]
+                        ctable = table_defines.get(obj['table'])
+                        if not ctable:
+                            continue
                         print "delete from %s"%ctable
                         db.execute("delete from %s"%ctable)
                         print self.metadata.tables[ctable].insert()
