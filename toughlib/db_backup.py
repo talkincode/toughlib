@@ -90,22 +90,12 @@ class DBBackup:
             'slc_rad_product' : 'tr_product',
             'slc_rad_product_attr' : 'tr_product_attr',
         }
-
-        def filter_attr(objs):
-            for o in objs:
-                if 'member_id' in o:
-                    o['customer_id'] = o['member_id']
-                    del o['member_id']
-                elif 'member_name' in o:
-                    o['customer_name'] = o['member_name'] 
-                    del o['member_name']
-                elif 'member_desc' in o:
-                    o['customer_desc'] = o['member_desc']
-                    del o['member_desc']
-
         with self.dbengine.begin() as db:
             with gzip.open(restorefs,'rb') as rfs:
                 for line in rfs:
+                    line = line.replace('member_id','customer_id')
+                    line = line.replace('member_name','customer_name')
+                    line = line.replace('member_desc','customer_desc')
                     try:
                         obj = json.loads(line)
                         if obj['table'] not in table_defines:
@@ -116,13 +106,11 @@ class DBBackup:
                         print self.metadata.tables[ctable].insert()
                         objs =  obj['data']
                         if len(objs) < 500:
-                            filter_attr(objs)
                             if objs:db.execute(self.metadata.tables[ctable].insert().values(objs))
                         else:
                             while len(objs) > 0:
                                 _tmp_pbjs = objs[:500]
                                 objs = objs[500:]
-                                filter_attr(objs)
                                 db.execute(self.metadata.tables[ctable].insert().values(_tmp_pbjs))
                             
                         # db.execute("commit;")
