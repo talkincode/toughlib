@@ -93,9 +93,14 @@ class DBBackup:
         with self.dbengine.begin() as db:
             with gzip.open(restorefs,'rb') as rfs:
                 for line in rfs:
+                    flag = False
                     for t in table_defines:
                         if t not in line:
-                            continue
+                            flag = True 
+                            break
+
+                    if not flag:
+                        continue
                     line = line.replace('member_id','customer_id')
                     line = line.replace('member_name','customer_name')
                     line = line.replace('member_desc','customer_desc')
