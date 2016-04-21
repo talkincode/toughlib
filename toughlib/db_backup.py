@@ -93,13 +93,14 @@ class DBBackup:
         with self.dbengine.begin() as db:
             with gzip.open(restorefs,'rb') as rfs:
                 for line in rfs:
+                    for t in table_defines:
+                        if t not in line[:100]:
+                            continue
                     line = line.replace('member_id','customer_id')
                     line = line.replace('member_name','customer_name')
                     line = line.replace('member_desc','customer_desc')
                     try:
                         obj = json.loads(line)
-                        if obj['table'] not in table_defines:
-                            continue
                         ctable = table_defines[obj['table']]
                         print "delete from %s"%ctable
                         db.execute("delete from %s"%ctable)
