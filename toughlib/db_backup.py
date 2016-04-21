@@ -114,11 +114,14 @@ class DBBackup:
                         print self.metadata.tables[ctable].insert()
                         objs =  obj['data']
                         if len(objs) < 500:
-                            if objs:db.execute(self.metadata.tables[ctable].insert().values(objs))
+                            if objs:
+                                print 'insert %s data' % len(objs)
+                                db.execute(self.metadata.tables[ctable].insert().values(objs))
                         else:
                             while len(objs) > 0:
                                 _tmp_pbjs = objs[:500]
                                 objs = objs[500:]
+                                print 'insert %s data' % len(_tmp_pbjs)
                                 db.execute(self.metadata.tables[ctable].insert().values(_tmp_pbjs))
                             
                         # db.execute("commit;")
