@@ -81,8 +81,8 @@ class DBBackup:
         table_defines = {
             'slc_node' : 'tr_node',
             'slc_operator' : 'tr_operator',
-            'slc_operator_rule' : 'tr_operator_rule',
-            'slc_param' : 'tr_param',
+            'slc_rad_operate_log' : 'tr_operate_log',
+            'slc_rad_accept_log' : 'tr_accept_log',
             'slc_rad_bas' : 'tr_bas',
             'slc_member' : 'tr_customer',
             'slc_member_order' : 'tr_customer_order',
