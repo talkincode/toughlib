@@ -322,6 +322,18 @@ def split_mline(src,wd=32,rstr='\r\n'):
     return ''.join(ss)
 
 
+def get_cron_interval(cron_time):
+    cron_interval = 120
+    if cron_time:
+        date_now = datetime.datetime.now()
+        _now_hm = date_now.strftime("%H:%M")
+        _ymd = get_currdate()
+        if _now_hm  > cron_time:
+            _ymd = (date_now + datetime.timedelta(days=1)).strftime("%Y-%m-%d") 
+        _interval = datetime.datetime.strptime("%s %s"%(_ymd,cron_time),"%Y-%m-%d %H:%M") - date_now
+        cron_interval = int(_interval.total_seconds())
+    return abs(cron_interval)
+
 if __name__ == '__main__':
     aes = AESCipher("LpWE9AtfDPQ3ufXBS6gJ37WW8TnSF920")
     # aa = aes.encrypt(u"中文".encode('utf-8'))
@@ -330,4 +342,5 @@ if __name__ == '__main__':
     # print cc.encode('utf-8')
     aa = aes.decrypt("+//J9HPYQ+5PccoBZml6ngcLLu1/XQh2KyWakfcExJeb0wyq1C9+okztyaFbspYZ")
     print aa
+    print get_cron_interval('19:00') /3600
 
