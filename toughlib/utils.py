@@ -277,7 +277,10 @@ def safeunicode(val):
         try:
             return val.decode('utf-8')
         except:
-            return val.decode('gb2312')
+            try:
+                return val.decode('gb2312')
+            except:
+                return val
     elif isinstance(val, unicode):
         return val
     elif isinstance(val, int):
@@ -320,9 +323,11 @@ def split_mline(src,wd=32,rstr='\r\n'):
 
 
 if __name__ == '__main__':
-    aes = AESCipher("5W2489feRMO3DMaeTk5bmRI8v3cTfmAb")
-    aa = aes.encrypt(u"中文".encode('utf-8'))
+    aes = AESCipher("LpWE9AtfDPQ3ufXBS6gJ37WW8TnSF920")
+    # aa = aes.encrypt(u"中文".encode('utf-8'))
+    # print aa
+    # cc = aes.decrypt(aa)
+    # print cc.encode('utf-8')
+    aa = aes.decrypt("+//J9HPYQ+5PccoBZml6ngcLLu1/XQh2KyWakfcExJeb0wyq1C9+okztyaFbspYZ")
     print aa
-    cc = aes.decrypt(aa)
-    print cc.encode('utf-8')
 
