@@ -161,12 +161,14 @@ def datetime2msec(dtime_str):
     _datetime =  datetime.datetime.strptime(dtime_str,"%Y-%m-%d %H:%M:%S")
     return int(time.mktime(_datetime.timetuple()))
     
-def gen_backep_id():
+def gen_backup_id():
     global _base_id
     if _base_id >= 9999:_base_id=0
     _base_id += 1
     _num = str(_base_id).zfill(4)
     return datetime.datetime.now().strftime("%Y%m%d_%H%M%S_") + _num
+
+gen_backep_id = gen_backup_id
 
 def gen_order_id():
     global _base_id
