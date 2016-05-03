@@ -15,6 +15,7 @@ class Permit():
     opr_cache = {}
 
     def __init__(self, parent=None):
+        self.free_routes = []
         if parent:
             self.routes = parent.routes
             self.handlers = parent.handlers
@@ -125,6 +126,8 @@ class Permit():
         _url = urlparse.urlparse(path)
         if not _url.path or not opr:
             return False
+        if _url.path in self.free_routes:
+            return True
         if _url.path not in self.routes:
             return False
         return opr in self.routes[_url.path]['oprs']
@@ -136,6 +139,7 @@ class Permit():
             assert (issubclass(cls, RequestHandler) or issubclass(cls, WebSocketHandler))
             if not menuname:
                 self.add_handler(cls, url_pattern)
+                self.free_routes.append(url_pattern)
             else:
                 selfobj.add_route(cls, url_pattern, menuname, category, 
                         order=order, is_menu=is_menu, is_open=is_open,oem=oem)

@@ -33,8 +33,10 @@ def make_sign(api_secret, params=[]):
     """
     _params = [utils.safeunicode(p) for p in params if p is not None]
     _params.sort()
+    print 'sorted params:',_params
     _params.insert(0, api_secret)
     strs = ''.join(_params)
+    print 'sign params:',strs
     mds = md5(strs.encode('utf-8')).hexdigest()
     return mds.upper()
 
@@ -109,8 +111,11 @@ def request(apiurl, data=None, **kwargs):
     return httpclient.post(apiurl, data=data, **kwargs)
 
 if __name__ == "__main__":
-    print apistatus
-    import doctest
-    doctest.testmod()
+    # print apistatus
+    # import doctest
+    # doctest.testmod()
+    #isp_name=123&isp_email=222@222.com&isp_idcard=&isp_desc=&isp_phone=22222222222&sign=9E5139D66E8E5C10634A3E96631BCF
+    params = ['123','222@222.com','22222222222']
+    print make_sign('LpWE9AtfDPQ3ufXBS6gJ37WW8TnSF920',params)
 
     
