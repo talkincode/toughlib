@@ -13,13 +13,15 @@ class Permit():
     opr_cache = {}
 
     def __init__(self, parent=None):
-        self.free_routes = []
+        
         if parent:
             self.routes = parent.routes
             self.handlers = parent.handlers
+            self.free_routes = parent.free_routes
         else:
             self.routes = {}
             self.handlers = {}
+            self.free_routes = []
 
     def fork(self,opr_name, opr_type=0,rules=[]):
         p = Permit.opr_cache.setdefault(opr_name,Permit(self))
