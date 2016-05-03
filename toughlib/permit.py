@@ -3,8 +3,6 @@
 import time
 import os
 import importlib
-from cyclone.web import RequestHandler
-from cyclone.websocket import WebSocketHandler
 from toughlib import dispatch,logger
 import urlparse
 
@@ -136,7 +134,6 @@ class Permit():
         selfobj = self
 
         def handler_wapper(cls):
-            assert (issubclass(cls, RequestHandler) or issubclass(cls, WebSocketHandler))
             if not menuname:
                 self.add_handler(cls, url_pattern)
                 self.free_routes.append(url_pattern)

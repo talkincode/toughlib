@@ -37,12 +37,19 @@ class AESCipher:
     def __init__(self,key=None):
         if key:self.setup(key)
 
+    def is_pwd_encrypt(self):
+        return os.environ.get("CLOSE_PASSWORD_ENCRYPTION")
+
     def setup(self, key): 
         self.bs = 32
         self.ori_key = key
         self.key = hashlib.sha256(key.encode()).digest()
 
     def encrypt(self, raw):
+        is_encrypt = self.is_pwd_encrypt()
+        if is_encrypt:
+            return raw
+
         raw = safestr(raw)
         raw = self._pad(raw)
         iv = Random.new().read(AES.block_size)
@@ -50,6 +57,10 @@ class AESCipher:
         return base64.b64encode(iv + cipher.encrypt(raw))
 
     def decrypt(self, enc):
+        is_encrypt = self.is_pwd_encrypt()
+        if is_encrypt:
+            return enc
+            
         enc = base64.b64decode(enc)
         iv = enc[:AES.block_size]
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
@@ -150,12 +161,14 @@ def datetime2msec(dtime_str):
     _datetime =  datetime.datetime.strptime(dtime_str,"%Y-%m-%d %H:%M:%S")
     return int(time.mktime(_datetime.timetuple()))
     
-def gen_backep_id():
+def gen_backup_id():
     global _base_id
     if _base_id >= 9999:_base_id=0
     _base_id += 1
     _num = str(_base_id).zfill(4)
     return datetime.datetime.now().strftime("%Y%m%d_%H%M%S_") + _num
+
+gen_backep_id = gen_backup_id
 
 def gen_order_id():
     global _base_id
@@ -266,7 +279,10 @@ def safeunicode(val):
         try:
             return val.decode('utf-8')
         except:
-            return val.decode('gb2312')
+            try:
+                return val.decode('gb2312')
+            except:
+                return val
     elif isinstance(val, unicode):
         return val
     elif isinstance(val, int):
@@ -308,10 +324,25 @@ def split_mline(src,wd=32,rstr='\r\n'):
     return ''.join(ss)
 
 
+def get_cron_interval(cron_time):
+    cron_interval = 120
+    if cron_time:
+        date_now = datetime.datetime.now()
+        _now_hm = date_now.strftime("%H:%M")
+        _ymd = get_currdate()
+        if _now_hm  > cron_time:
+            _ymd = (date_now + datetime.timedelta(days=1)).strftime("%Y-%m-%d") 
+        _interval = datetime.datetime.strptime("%s %s"%(_ymd,cron_time),"%Y-%m-%d %H:%M") - date_now
+        cron_interval = int(_interval.total_seconds())
+    return abs(cron_interval)
+
 if __name__ == '__main__':
-    aes = AESCipher("5W2489feRMO3DMaeTk5bmRI8v3cTfmAb")
-    aa = aes.encrypt(u"中文".encode('utf-8'))
+    aes = AESCipher("LpWE9AtfDPQ3ufXBS6gJ37WW8TnSF920")
+    # aa = aes.encrypt(u"中文".encode('utf-8'))
+    # print aa
+    # cc = aes.decrypt(aa)
+    # print cc.encode('utf-8')
+    aa = aes.decrypt("+//J9HPYQ+5PccoBZml6ngcLLu1/XQh2KyWakfcExJeb0wyq1C9+okztyaFbspYZ")
     print aa
-    cc = aes.decrypt(aa)
-    print cc.encode('utf-8')
+    print get_cron_interval('19:00') /3600
 

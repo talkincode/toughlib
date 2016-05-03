@@ -1,4 +1,7 @@
-import pickle
+try:
+   import cPickle as pickle
+except:
+   import pickle
 import time
 import hmac
 import uuid

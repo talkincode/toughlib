@@ -73,6 +73,64 @@ class DBBackup:
 
                 cache_datas.clear()
 
+    def restoredbv1(self,restorefs):
+        if not os.path.exists(restorefs):
+            print 'backup file not exists'
+            return
+
+        table_defines = {
+            'slc_node' : 'tr_node',
+            'slc_operator' : 'tr_operator',
+            'slc_rad_operate_log' : 'tr_operate_log',
+            'slc_rad_accept_log' : 'tr_accept_log',
+            'slc_rad_bas' : 'tr_bas',
+            'slc_member' : 'tr_customer',
+            'slc_member_order' : 'tr_customer_order',
+            'slc_rad_account' : 'tr_account',
+            'slc_rad_product' : 'tr_product',
+            'slc_rad_product_attr' : 'tr_product_attr',
+        }
+        with self.dbengine.begin() as db:
+            with gzip.open(restorefs,'rb') as rfs:
+                for line in rfs:
+                    flag = False
+                    for t in table_defines:
+                        if t not in line:
+                            flag = True 
+                            break
+
+                    if not flag:
+                        continue
+                    line = line.replace('member_id','customer_id')
+                    line = line.replace('member_name','customer_name')
+                    line = line.replace('member_desc','customer_desc')
+                    try:
+                        obj = json.loads(line)
+                        ctable = table_defines.get(obj['table'])
+                        if not ctable:
+                            continue
+                        print "delete from %s"%ctable
+                        db.execute("delete from %s"%ctable)
+                        print self.metadata.tables[ctable].insert()
+                        objs =  obj['data']
+                        if len(objs) < 500:
+                            if objs:
+                                print 'insert %s data' % len(objs)
+                                db.execute(self.metadata.tables[ctable].insert().values(objs))
+                        else:
+                            while len(objs) > 0:
+                                _tmp_pbjs = objs[:500]
+                                objs = objs[500:]
+                                print 'insert %s data' % len(_tmp_pbjs)
+                                db.execute(self.metadata.tables[ctable].insert().values(_tmp_pbjs))
+                            
+                        # db.execute("commit;")
+                    except:
+                        print 'error data %s ...'%line[:128] 
+                        import traceback
+                        traceback.print_exc()
+
+
 if __name__ == '__main__':
     pass
 

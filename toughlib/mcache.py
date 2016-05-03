@@ -37,14 +37,12 @@ class Mcache:
 
 
     def aget(self, key, fetchfunc, *args, **kwargs):
-        result = self.get(key)
-        if result:
-            return result
-        if fetchfunc:
+        if key in self.cache:
+            return self.get(key)
+        elif fetchfunc:
             expire = kwargs.pop('expire',600)
             result = fetchfunc(*args,**kwargs)
-            if result:
-                self.set(key,result,expire=expire)
+            self.set(key,result,expire=expire)
             return result
 
 
