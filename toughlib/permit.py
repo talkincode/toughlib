@@ -136,7 +136,8 @@ class Permit():
         def handler_wapper(cls):
             if not menuname:
                 self.add_handler(cls, url_pattern)
-                self.free_routes.append(url_pattern)
+                selfobj.free_routes.append(url_pattern)
+                logger.info("add free handler %s" % url_pattern
             else:
                 selfobj.add_route(cls, url_pattern, menuname, category, 
                         order=order, is_menu=is_menu, is_open=is_open,oem=oem)
