@@ -24,16 +24,16 @@ class ContextFactory(ClientContextFactory):
 class SendMail:
 
     def __init__(self, server='127.0.0.1', port=25, user=None, password=None,from_addr=''):
-        self.smtp_server = utils.safestr(server)
-        self.from_addr = utils.safestr(from_addr)
+        self.smtp_server = server
+        self.from_addr = from_addr
         self.smtp_port = int(port)
         self.smtp_user = user
         self.smtp_pwd = password
 
     def send_mail(self, mailto, topic, content, tls=False,**kwargs):
-        message = email.MIMEText.MIMEText(content,'text/plain', 'utf-8')
+        message = email.MIMEText.MIMEText(content,'html', 'utf-8')
         message["Subject"] = email.Header.Header(topic,'utf-8')
-        message["From"] = email.Header.Header("%s <%s>"%(self.from_addr[:self.from_addr.find('@')],self.from_addr),'utf-8')
+        message["From"] = self.from_addr
         message["To"] = mailto
         message["Accept-Language"]="zh-CN"
         message["Accept-Charset"]="ISO-8859-1,utf-8"
