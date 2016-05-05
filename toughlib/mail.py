@@ -31,18 +31,18 @@ class SendMail:
         self.smtp_pwd = password
 
     def send_mail(self, mailto, topic, content, tls=False,**kwargs):
-        message = email.MIMEText.MIMEText(content,'html', 'utf-8')
+        message = email.MIMEText.MIMEText(content,'ext/plain', 'utf-8')
         message["Subject"] = email.Header.Header(topic,'utf-8')
         message["From"] = email.Header.Header("%s <%s>"%(self.from_addr[:self.from_addr.find('@')],self.from_addr),'utf-8')
         message["To"] = mailto
         message["Accept-Language"]="zh-CN"
         message["Accept-Charset"]="ISO-8859-1,utf-8"
         if not tls:
-            logger.info('send mail')
+            logger.info('send mail:%s:%s:%s'%(self.smtp_server,self.smtp_port,mailto))
             return sendmail(self.smtp_server, self.from_addr, mailto, message,
                         port=self.smtp_port, username=self.smtp_user, password=self.smtp_pwd)
         else:
-            logger.info('send tls mail')
+            logger.info('send tls mail:%s:%s:%s'%(self.smtp_server,self.smtp_port,mailto))
             contextFactory = ContextFactory()
             resultDeferred = Deferred()
             senderFactory = ESMTPSenderFactory(
