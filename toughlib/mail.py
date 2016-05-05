@@ -2,7 +2,7 @@
 #coding:utf-8
 
 from cStringIO import StringIO
-from OpenSSL.SSL import SSLv3_METHOD
+from OpenSSL.SSL import OP_NO_SSLv3
 from twisted.mail.smtp import ESMTPSenderFactory
 from twisted.internet.ssl import ClientContextFactory
 from twisted.internet.defer import Deferred
@@ -13,6 +13,13 @@ from twisted.mail.smtp import sendmail
 # from email.mime.text import MIMEText
 # from email import Header
 import email
+
+class ContextFactory(ClientContextFactory):
+    def getContext(self):
+        """Get the parent context but disable SSLv3."""
+        ctx = ClientContextFactory.getContext(self)
+        ctx.set_options(OP_NO_SSLv3)
+        return ctx
 
 class SendMail:
 
@@ -36,8 +43,7 @@ class SendMail:
                         port=self.smtp_port, username=self.smtp_user, password=self.smtp_pwd)
         else:
             logger.info('send tls mail')
-            contextFactory = ClientContextFactory()
-            contextFactory.method = SSLv3_METHOD
+            contextFactory = ContextFactory()
             resultDeferred = Deferred()
             senderFactory = ESMTPSenderFactory(
                 self.smtp_user,
