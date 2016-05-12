@@ -113,7 +113,7 @@ class Logger:
             self.syslogger.addHandler(handler)
         else:
             handler = logging.StreamHandler(sys.stderr)
-            formatter = logging.Formatter(u'%(message)s')
+            formatter = logging.Formatter(u'%(asctime)s %(name)s %(levelname)-4s %(message)s','%b %d %H:%M:%S')
             handler.setFormatter(formatter)
             self.syslogger.addHandler(handler)
 
