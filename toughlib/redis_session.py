@@ -41,7 +41,7 @@ class SessionManager(object):
         self.secret = secret
         self.session_timeout = session_timeout
         self.redis = redis.StrictRedis(host=cache_config.get('host'), 
-            port=cache_config.get("port"), password=cache_config.get('passwd'))
+            port=cache_config.get("port"), password=cache_config.get('passwd'),db=1)
         
     def encode_data(self,data):
         return base64.b64encode(pickle.dumps(data, pickle.HIGHEST_PROTOCOL))

@@ -21,7 +21,7 @@ class CacheManager(object):
         self.stattimes = stattimes
         self.cache_config = cache_config
         self.redis = redis.StrictRedis(host=cache_config.get('host'), 
-            port=cache_config.get("port"), password=cache_config.get('passwd'))
+            port=cache_config.get("port"), password=cache_config.get('passwd'),db=0)
         self.get_total = 0
         self.set_total = 0
         self.hit_total = 0
@@ -31,7 +31,7 @@ class CacheManager(object):
         # self.print_hit_stat(first_delay=10)
         self.log.info('redis client connected')
 
-    def clear(self):
+    def clean(self):
         self.log.info("flush cache !")
         self.redis.flushdb()
         self.get_total = 0
