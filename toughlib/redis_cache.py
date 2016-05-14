@@ -31,7 +31,15 @@ class CacheManager(object):
         # self.print_hit_stat(first_delay=10)
         self.log.info('redis client connected')
 
-
+    def clear(self):
+        self.log.info("flush cache !")
+        self.redis.flushdb()
+        self.get_total = 0
+        self.set_total = 0
+        self.hit_total = 0
+        self.miss_total = 0
+        self.update_total = 0
+        self.delete_total = 0
 
     def print_hit_stat(self, first_delay=0):
         if first_delay > 0:
