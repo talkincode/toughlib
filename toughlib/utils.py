@@ -325,16 +325,18 @@ def split_mline(src,wd=32,rstr='\r\n'):
 
 
 def get_cron_interval(cron_time):
-    cron_interval = 120
     if cron_time:
+        cron_time = "%s:00"%cron_time
         date_now = datetime.datetime.now()
-        _now_hm = date_now.strftime("%H:%M")
+        _now_hm = date_now.strftime("%H:%M:%S")
         _ymd = get_currdate()
         if _now_hm  > cron_time:
             _ymd = (date_now + datetime.timedelta(days=1)).strftime("%Y-%m-%d") 
-        _interval = datetime.datetime.strptime("%s %s"%(_ymd,cron_time),"%Y-%m-%d %H:%M") - date_now
-        cron_interval = int(_interval.total_seconds())
-    return abs(cron_interval)
+        _interval = datetime.datetime.strptime("%s %s"%(_ymd,cron_time),"%Y-%m-%d %H:%M:%S") - date_now
+        _itimes = int(_interval.total_seconds())
+        return _itimes if _itimes > 0 else 86400 
+    else:
+        return 120
 
 if __name__ == '__main__':
     aes = AESCipher("LpWE9AtfDPQ3ufXBS6gJ37WW8TnSF920")
@@ -342,7 +344,7 @@ if __name__ == '__main__':
     # print aa
     # cc = aes.decrypt(aa)
     # print cc.encode('utf-8')
-    aa = aes.decrypt("+//J9HPYQ+5PccoBZml6ngcLLu1/XQh2KyWakfcExJeb0wyq1C9+okztyaFbspYZ")
-    print aa
-    print get_cron_interval('19:00') /3600
+    # aa = aes.decrypt("+//J9HPYQ+5PccoBZml6ngcLLu1/XQh2KyWakfcExJeb0wyq1C9+okztyaFbspYZ")
+    # print aa
+    print get_cron_interval('09:32') 
 
