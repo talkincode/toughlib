@@ -145,9 +145,13 @@ class Logger:
         text = txlog.textFromEventDict(eventDict)
         if text is None:
             return
-        text = repr(text)
+        if not isinstance(text, (unicode,str,dict,list)):
+            text = text
+        else:
+            text = safeunicode(text)
+
         if eventDict['isError'] and 'failure' in eventDict:
-            self.error(text)
+            self.exception(text)
         else:
             self.info(text)
 
