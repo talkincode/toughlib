@@ -208,7 +208,7 @@ def fmt_online_time(ctime):
     dt = nowdate - cdate
     times = dt.total_seconds()
     if times <= 60:
-        return u"%s秒"%times
+        return u"%s秒"%int(times)
 
     d = times / (3600 * 24)
     h = times % (3600 * 24) / 3600
