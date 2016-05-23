@@ -118,10 +118,10 @@ def bbgb2mb(bb,gb):
     tl = bl + gl
     return str(tl.quantize(decimal.Decimal('1.00')))
     
-def kb2mb(ik):
+def kb2mb(ik,fmt='1.00'):
     _kb = decimal.Decimal(ik or 0)
     _mb = _kb / decimal.Decimal(1024)
-    return str(_mb.quantize(decimal.Decimal('1.00')))
+    return str(_mb.quantize(decimal.Decimal(fmt)))
     
 def mb2kb(im=0):
     _mb = decimal.Decimal(im or 0)
