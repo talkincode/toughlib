@@ -33,6 +33,5 @@ button_style_block = {"class": "btn btn-block"}
 
 
 
-
 if __name__ == "__main__":
     print is_number.valid('') 

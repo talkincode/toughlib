@@ -207,16 +207,20 @@ def fmt_online_time(ctime):
     nowdate = datetime.datetime.now()
     dt = nowdate - cdate
     times = dt.total_seconds()
+    if times <= 60:
+        return u"%s秒"%times
+
     d = times / (3600 * 24)
     h = times % (3600 * 24) / 3600
     m = times % (3600 * 24) % 3600 / 60
+    s = times % (3600 * 24) % 3600 % 60
 
     if int(d) > 0:
-        return u"%s天%s小时%s分钟" % (int(d), int(h), int(m))
-    elif int(d) > 0 and int(h) > 0:
-        return u"%s小时%s分钟" % (int(h), int(m))
-    else:
-        return u"%s分钟" % (int(m))
+        return u"%s天%s小时%s分钟%s秒" % (int(d), int(h), int(m),int(s))
+    elif int(d) == 0 and int(h) > 0:
+        return u"%s小时%s分钟%s秒" % (int(h), int(m), int(s))
+    elif int(d) == 0 and int(h) == 0 and int(m) > 0:
+        return u"%s分钟%s秒" % (int(m),int(s))
 
 
 def add_months(dt,months, days=0):
