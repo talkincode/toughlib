@@ -125,7 +125,7 @@ class Form(object):
             if not i.is_hidden():
                 out.append('        <label class="col-sm-4 control-label" id="lab_%s" for="%s">%s</label>\n' % (i.id,i.id, net.websafe(i.description)))
             out.append(i.pre)
-            out.append('        <div class="col-sm-6">\n')
+            out.append('        <div class="col-sm-%s">\n'%i.iwidth)
             out.append("        %s\n"%i.render())
             out.append('        </div>\n')
             if i.help:
@@ -201,6 +201,7 @@ class Input(object):
         self.pre = attrs.pop('pre', "")
         self.post = attrs.pop('post', "")
         self.hr = attrs.pop('hr',False)
+        self.iwidth = attrs.pop('iwidth',6)
         self.note = None
         
         self.id = attrs.setdefault('id', self.get_default_id())
