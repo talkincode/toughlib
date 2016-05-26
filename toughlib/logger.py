@@ -10,6 +10,7 @@ from toughlib.utils import safeunicode
 from twisted.python import log as txlog
 import functools
 
+EVENT_TRACE = 'syslog_trace'
 EVENT_INFO = 'syslog_info'
 EVENT_DEBUG = 'syslog_debug'
 EVENT_ERROR = 'syslog_error'
@@ -158,6 +159,13 @@ class Logger:
 
 setup = functools.partial(dispatch.pub, EVENT_SETUP) 
 
+
+
+def trace(name,message,**kwargs):
+    if not isinstance(message, unicode):
+        message = safeunicode(message)
+    if EVENT_TRACE in dispatch.dispatch.callbacks:
+        dispatch.pub(EVENT_TRACE,name,message,**kwargs)
 
 
 def info(message,**kwargs):
