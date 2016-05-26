@@ -56,7 +56,6 @@ class Permit():
         self.add_handler(handle_cls, path, handle_params)
 
     def add_handler(self, handle_cls, path, handle_params={}):
-        logger.info("add handler [%s:%s]" % (path, repr(handle_cls)))
         self.handlers[path]= (path, handle_cls, handle_params)
 
     @property
@@ -139,10 +138,11 @@ class Permit():
             if not menuname:
                 self.add_handler(cls, url_pattern)
                 selfobj.free_routes.append(url_pattern)
-                logger.info("add free handler %s" % url_pattern)
+                logger.info("add free route [%s : %s]" % (url_pattern, repr(cls)))
             else:
                 selfobj.add_route(cls, url_pattern, menuname, category, 
                         order=order, is_menu=is_menu, is_open=is_open,oem=oem)
+                logger.info("add managed route [%s : %s]" % (url_pattern, repr(cls)))
             return cls
 
         return handler_wapper
