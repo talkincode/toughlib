@@ -14,12 +14,13 @@ class EventDispatcher:
         self.prefix = prefix
         self.callbacks = {}
 
-
-    def sub(self, name, func):
+    def sub(self, name, func, check_exists=False)):
+        if check_exists and name in self.callbacks:
+            return
         self.callbacks.setdefault(name, []).append(func)
         log.msg('register event %s %s' % (name,(func.__doc__ or '')))
 
-    def register(self, obj):
+    def register(self, obj, check_exists=False):
         d = {}
         reflect.accumulateMethods(obj, d, self.prefix)
         for k,v in d.items():
@@ -36,8 +37,11 @@ class EventDispatcher:
                 deferd.addCallbacks(lambda r:r,lambda e:e)
                 results.append(deferd)
             else:
-                func(*args, **kwargs)
-        return defer.DeferredList(results)
+                results.append(func(*args, **kwargs))
+        if async:
+            return defer.DeferredList(results)
+        else:
+            return results
 
 
 dispatch = EventDispatcher()
