@@ -14,7 +14,7 @@ class EventDispatcher:
         self.prefix = prefix
         self.callbacks = {}
 
-    def sub(self, name, func, check_exists=False)):
+    def sub(self, name, func, check_exists=False):
         if check_exists and name in self.callbacks:
             return
         self.callbacks.setdefault(name, []).append(func)
