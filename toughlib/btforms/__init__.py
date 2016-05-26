@@ -92,6 +92,7 @@ class Form(object):
         self.title = kw.pop("title","")
         self.method = kw.pop("method","post")
         self.onsubmit = kw.pop("onsubmit","")
+        self.id = kw.pop("id",str(id(self)))
         self.error = None
 
     def __call__(self, x=None):
