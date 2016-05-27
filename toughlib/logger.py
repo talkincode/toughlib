@@ -18,10 +18,6 @@ EVENT_EXCEPTION = 'syslog_exception'
 EVENT_SETUP = 'syslog_setup'
 
 
-default_log = logging.getLogger('toughlogger')
-default_log.setLevel(logging.DEBUG)
-
-
 def string_to_level(log_level):
     if log_level == "CRITICAL":
         return logging.CRITICAL
@@ -164,17 +160,18 @@ setup = functools.partial(dispatch.pub, EVENT_SETUP)
 def trace(name,message,**kwargs):
     if not isinstance(message, unicode):
         message = safeunicode(message)
+
     if EVENT_TRACE in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_TRACE,name,message,**kwargs)
-
+        dispatch.pub(EVENT_INFO,message,**kwargs)
 
 def info(message,**kwargs):
     if not isinstance(message, unicode):
         message = safeunicode(message)
     if EVENT_INFO in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_INFO,message,**kwargs)
-    else:
-        default_log.info(message)
+        if EVENT_TRACE in dispatch.dispatch.callbacks:
+            dispatch.pub(EVENT_TRACE,"info",message,**kwargs)
 
 
 def debug(message,**kwargs):
@@ -182,18 +179,24 @@ def debug(message,**kwargs):
         message = safeunicode(message)
     if EVENT_DEBUG in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_DEBUG,message,**kwargs)
-    else:
-        default_log.debug(message)
-
+        if EVENT_TRACE in dispatch.dispatch.callbacks:
+            dispatch.pub(EVENT_TRACE,"debug",message,**kwargs)
 
 def error(message,**kwargs):
     if not isinstance(message, unicode):
         message = safeunicode(message)
     if EVENT_ERROR in dispatch.dispatch.callbacks:
         dispatch.pub(EVENT_ERROR,message,**kwargs)
-    else:
-        default_log.error(message)
+        if EVENT_TRACE in dispatch.dispatch.callbacks:
+            dispatch.pub(EVENT_TRACE,"error",message,**kwargs)
 
 
-exception = functools.partial(dispatch.pub, EVENT_EXCEPTION)
+
+def exception(err,**kwargs):
+    if EVENT_EXCEPTION in dispatch.dispatch.callbacks:
+        dispatch.pub(EVENT_EXCEPTION,err,**kwargs)
+        if EVENT_TRACE in dispatch.dispatch.callbacks:
+            dispatch.pub(EVENT_TRACE,"exception",repr(err),**kwargs)
+
+
 
