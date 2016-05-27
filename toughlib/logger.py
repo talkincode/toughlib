@@ -126,16 +126,16 @@ class Logger:
     def event_syslog_setup(self,config):
         self.setup(config)
 
-    def event_syslog_info(self, msg):
+    def event_syslog_info(self, msg, **kwargs):
         self.info(msg)
 
-    def event_syslog_debug(self, msg):
+    def event_syslog_debug(self, msg, **kwargs):
         self.debug(msg)
 
-    def event_syslog_error(self, msg):
+    def event_syslog_error(self, msg, **kwargs):
         self.error(msg)
 
-    def event_syslog_exception(self, err):
+    def event_syslog_exception(self, err, **kwargs):
         self.syslogger.exception(err)
 
     def emit(self, eventDict):
