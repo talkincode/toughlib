@@ -33,10 +33,10 @@ def make_sign(api_secret, params=[]):
     """
     _params = [utils.safeunicode(p) for p in params if p is not None]
     _params.sort()
-    print 'sorted params:',_params
+    # print 'sorted params:',_params
     _params.insert(0, api_secret)
     strs = ''.join(_params)
-    print 'sign params:',strs
+    # print 'sign params:',strs
     mds = md5(strs.encode('utf-8')).hexdigest()
     return mds.upper()
 
