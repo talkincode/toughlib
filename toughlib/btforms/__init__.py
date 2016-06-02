@@ -95,6 +95,10 @@ class Form(object):
         self.id = kw.pop("id",str(id(self)))
         self.error = None
 
+    @property
+    def errors(self):
+        return ",".join([u"%s error,%s" % (i.description, i.note) for i in self.inputs if i.note])
+
     def __call__(self, x=None):
         o = copy.deepcopy(self)
         if x: o.validates(x)
