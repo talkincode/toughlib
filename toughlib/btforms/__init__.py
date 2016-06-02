@@ -97,7 +97,7 @@ class Form(object):
 
     @property
     def errors(self):
-        return ",".join([u"%s error,%s" % (i.description, i.note) for i in self.inputs if i.note])
+        return ",".join([u"%s: %s; " % (i.description, i.note) for i in self.inputs if i.note])
 
     def __call__(self, x=None):
         o = copy.deepcopy(self)
