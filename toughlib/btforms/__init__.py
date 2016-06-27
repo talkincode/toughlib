@@ -85,6 +85,7 @@ class Form(object):
 
     def __init__(self, *inputs, **kw):
         self.inputs = inputs
+        self.attrs = Storage()
         self.valid = True
         self.note = None
         self.validators = kw.pop('validators', [])

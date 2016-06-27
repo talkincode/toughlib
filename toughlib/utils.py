@@ -352,6 +352,8 @@ def get_cron_interval(cron_time):
     else:
         return 120
 
+
+
 if __name__ == '__main__':
     aes = AESCipher("LpWE9AtfDPQ3ufXBS6gJ37WW8TnSF920")
     # aa = aes.encrypt(u"中文".encode('utf-8'))
@@ -360,5 +362,20 @@ if __name__ == '__main__':
     # print cc.encode('utf-8')
     # aa = aes.decrypt("+//J9HPYQ+5PccoBZml6ngcLLu1/XQh2KyWakfcExJeb0wyq1C9+okztyaFbspYZ")
     # print aa
-    print get_cron_interval('09:32') 
+    # print get_cron_interval('09:32') 
+    now = datetime.datetime.now()
+    mon = now.month + 1
+    mon = mon if mon <= 12 else 1
+    timestr = "%s-%s-1 01:00:00" % (now.year,mon)
+    _date = datetime.datetime.strptime(timestr, "%Y-%m-%d %H:%M:%S")
+    tt = (time.mktime(_date.timetuple()) - time.time()) /86400
+    print _date,tt
+
+
+
+
+
+
+
+
 
