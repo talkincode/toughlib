@@ -34,7 +34,7 @@ class EventDispatcher:
         for func in self.callbacks[name]:
             if async:
                 deferd = deferToThread(func, *args, **kwargs)
-                deferd.addCallbacks(lambda r:r,lambda e:e)
+                deferd.addErrback(log.err)
                 results.append(deferd)
             else:
                 results.append(func(*args, **kwargs))
