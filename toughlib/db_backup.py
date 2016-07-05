@@ -104,6 +104,7 @@ class DBBackup:
                     line = line.replace('member_id','customer_id')
                     line = line.replace('member_name','customer_name')
                     line = line.replace('member_desc','customer_desc')
+                    line = line.replace('vlan_id','vlan_id1')
                     try:
                         obj = json.loads(line)
                         ctable = table_defines.get(obj['table'])
