@@ -53,7 +53,7 @@ class DBBackup:
                         else:
                             cache_datas[tabname].append(rdata)
 
-                        if tabname in cache_datas and len(cache_datas[tabname]) >= 500:
+                        if tabname in cache_datas and len(cache_datas[tabname]) >= 49:
                             print 'insert datas<%s> into %s' % (len(cache_datas[tabname]), tabname)
                             db.execute(self.metadata.tables[tabname].insert().values(cache_datas[tabname]))
                             del cache_datas[tabname]
@@ -113,14 +113,14 @@ class DBBackup:
                         db.execute("delete from %s"%ctable)
                         print self.metadata.tables[ctable].insert()
                         objs =  obj['data']
-                        if len(objs) < 500:
+                        if len(objs) < 49:
                             if objs:
                                 print 'insert %s data' % len(objs)
                                 db.execute(self.metadata.tables[ctable].insert().values(objs))
                         else:
                             while len(objs) > 0:
-                                _tmp_pbjs = objs[:500]
-                                objs = objs[500:]
+                                _tmp_pbjs = objs[:49]
+                                objs = objs[49:]
                                 print 'insert %s data' % len(_tmp_pbjs)
                                 db.execute(self.metadata.tables[ctable].insert().values(_tmp_pbjs))
                             

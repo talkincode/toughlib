@@ -16,12 +16,12 @@ CACHE_UPDATE_EVENT = 'cache_update'
 
 class CacheManager(object):
     log = Logger()
-    def __init__(self, cache_config,cache_name="cache",stattimes=300):
+    def __init__(self, cache_config,cache_name="cache",stattimes=300,db=0):
         self.cache_name = cache_name
         self.stattimes = stattimes
         self.cache_config = cache_config
         self.redis = redis.StrictRedis(host=cache_config.get('host'), 
-            port=cache_config.get("port"), password=cache_config.get('passwd'),db=0)
+            port=cache_config.get("port"), password=cache_config.get('passwd'),db=db)
         self.get_total = 0
         self.set_total = 0
         self.hit_total = 0
