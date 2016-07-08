@@ -11,8 +11,6 @@ install_requires = [
     'Twisted>=15.0.0',
     'SQLAlchemy',
     'treq',
-    'cyclone',
-    'pycrypto'
 ]
 install_requires_empty = []
 
