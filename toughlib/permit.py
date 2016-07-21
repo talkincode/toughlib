@@ -133,10 +133,23 @@ class Permit():
             return False
         return opr in self.routes[_url.path]['oprs']
 
+    def suproute(self, url_pattern, menuname=None, category=None, 
+                  is_menu=False, order=0, is_open=True,oem=False,**kwargs):
+        return self.route(
+            url_pattern, 
+            menuname=None, 
+            category=None, 
+            is_menu=False, 
+            order=0, 
+            is_open=True,
+            oem=False,
+            admin=True,
+            **kwargs
+        )
+
     def route(self, url_pattern, menuname=None, category=None, 
               is_menu=False, order=0, is_open=True,oem=False,**kwargs):
         selfobj = self
-
         def handler_wapper(cls):
             if not menuname:
                 self.add_handler(cls, url_pattern)
