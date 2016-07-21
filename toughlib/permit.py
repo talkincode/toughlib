@@ -34,8 +34,9 @@ class Permit():
         return p
 
 
-    def add_route(self, handle_cls, path, name, category, handle_params={}, is_menu=False, order=time.time(),
-                  is_open=True, oem=False):
+    def add_route(self, handle_cls, path, name, category, 
+                  handle_params={}, is_menu=False, 
+                  order=time.time(),is_open=True, oem=False,**kwargs):
         """ 注册权限
         """
         if not path: return
@@ -53,10 +54,11 @@ class Permit():
             is_open=is_open,  # 是否开放授权
             oem=oem #是否定制功能
         )
+        self.routes[path].update(**kwargs)
         self.add_handler(handle_cls, path, handle_params)
 
     def add_handler(self, handle_cls, path, handle_params={}):
-        self.handlers[path]= (path, handle_cls, handle_params)
+        self.handlers[path] = (path, handle_cls, handle_params)
 
     @property
     def all_handlers(self):
@@ -131,7 +133,8 @@ class Permit():
             return False
         return opr in self.routes[_url.path]['oprs']
 
-    def route(self, url_pattern, menuname=None, category=None, is_menu=False, order=0, is_open=True,oem=False):
+    def route(self, url_pattern, menuname=None, category=None, 
+              is_menu=False, order=0, is_open=True,oem=False,**kwargs):
         selfobj = self
 
         def handler_wapper(cls):
@@ -141,7 +144,7 @@ class Permit():
                 logger.info("add free route [%s : %s]" % (url_pattern, repr(cls)))
             else:
                 selfobj.add_route(cls, url_pattern, menuname, category, 
-                        order=order, is_menu=is_menu, is_open=is_open,oem=oem)
+                        order=order, is_menu=is_menu, is_open=is_open,oem=oem,**kwargs)
                 logger.info("add managed route [%s : %s]" % (url_pattern, repr(cls)))
             return cls
 
