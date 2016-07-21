@@ -135,17 +135,14 @@ class Permit():
 
     def suproute(self, url_pattern, menuname=None, category=None, 
                   is_menu=False, order=0, is_open=True,oem=False,**kwargs):
-        return self.route(
-            url_pattern, 
-            menuname=None, 
-            category=None, 
-            is_menu=False, 
-            order=0, 
-            is_open=True,
-            oem=False,
-            admin=True,
-            **kwargs
-        )
+        selfobj = self
+        def handler_wapper(cls):
+            selfobj.add_route(cls, url_pattern, menuname, category, 
+                    order=order, is_menu=is_menu, is_open=is_open,oem=oem, admin=True,**kwargs)
+            logger.info("add super managed route [%s : %s]" % (url_pattern, repr(cls)))
+            return cls
+
+        return handler_wapper
 
     def route(self, url_pattern, menuname=None, category=None, 
               is_menu=False, order=0, is_open=True,oem=False,**kwargs):
