@@ -64,7 +64,11 @@ def load_events(event_path=None,pkg_prefix=None,excludes=[],event_params={}):
                     event_params=event_params,
                 )
             _ev = "{0}.{1}".format(pkg_prefix, ev)
-            dispatch.register(importlib.import_module(_ev).__call__(**event_params))
+            robj = importlib.import_module(_ev)
+            if hasattr(robj, 'evobj'):
+                dispatch.register(robj.evobj)
+            if hasattr(robj, '__call__'):
+                dispatch.register(robj.__call__(**event_params))
         except Exception as err:
             import traceback
             traceback.print_exc()
