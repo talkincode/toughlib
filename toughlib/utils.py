@@ -205,9 +205,14 @@ def fmt_second(time_total):
 def is_expire(dstr):
     if not dstr:
         return False
-    expire_date = datetime.datetime.strptime("%s 23:59:59" % dstr, "%Y-%m-%d %H:%M:%S")
-    now = datetime.datetime.now()
-    return expire_date < now
+    try:
+        expire_date = datetime.datetime.strptime("%s 23:59:59" % dstr, "%Y-%m-%d %H:%M:%S")
+        now = datetime.datetime.now()
+        return expire_date < now
+    except:
+        import traceback
+        traceback.print_exc()
+        return False
 
 def fmt_online_time(ctime):
     if not ctime:
