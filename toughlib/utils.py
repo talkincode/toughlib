@@ -281,7 +281,7 @@ def safestr(val):
         return str(val)
     elif isinstance(val, float):
         return str(val)
-    elif isinstance(val, dict):
+    elif isinstance(val, (dict,list)):
         return json.dumps(val, ensure_ascii=False)
     else:
         try:
@@ -308,7 +308,7 @@ def safeunicode(val):
         return str(val).decode('utf-8')
     elif isinstance(val, float):
         return str(val).decode('utf-8')
-    elif isinstance(val, dict):
+    elif isinstance(val, (dict,list)):
         return json.dumps(val)
     else:
         try:
