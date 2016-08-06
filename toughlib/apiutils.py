@@ -50,7 +50,7 @@ def check_sign(api_secret, msg):
     if "sign" not in msg:
         return False
     sign = msg['sign']
-    params = [utils.safestr(msg[k]) for k in msg if k != 'sign']
+    params = [utils.safestr(msg[k]) for k in msg if k != 'sign' and msg[k] is not None]
     local_sign = make_sign(api_secret, params)
     result = (sign == local_sign)
     if not result:
