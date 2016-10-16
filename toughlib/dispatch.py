@@ -24,7 +24,7 @@ class EventDispatcher:
         d = {}
         reflect.accumulateMethods(obj, d, self.prefix)
         for k,v in d.items():
-            self.sub(k, v)
+            self.sub(k, v, check_exists=check_exists)
 
     def pub(self, name, *args, **kwargs):
         if name not in self.callbacks:
