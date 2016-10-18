@@ -33,6 +33,9 @@ class Config(ConfigDict):
     def __init__(self, conf_file=None, **kwargs):
         assert(conf_file is not None)
         print "loading config {0}".format(conf_file)
+        if not os.path.exists(conf_file):
+            print 'config not exists'
+            return
         with open(conf_file) as cf:
             self.update(json.loads(cf.read()))
         self.update(**kwargs)
@@ -52,7 +55,7 @@ def find_config(conf_file=None):
     return Config(conf_file)
 
 if __name__ == "__main__":
-    cfg = find_config("/tmp/tpconfig2")
+    cfg = find_config("/tmp/tpconfig21")
     print cfg
     admin = {}
     admin['host'] = '192.1.1.1'
