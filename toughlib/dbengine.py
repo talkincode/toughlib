@@ -36,6 +36,7 @@ class DBEngine(object):
                 self.dburl,
                 echo=bool(self.config.database.echo),
                 legacy_schema_aliasing=True,
+                convert_unicode=True,
                 pool_size = int(self.pool_size),
                 pool_recycle=int(self.config.database.pool_recycle)
             )
