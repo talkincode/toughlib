@@ -31,6 +31,14 @@ class DBEngine(object):
                 pool_size = int(self.pool_size),
                 pool_recycle=int(self.config.database.pool_recycle)
             )
+        if self.dbtype == 'mssql':
+            return create_engine(
+                self.dburl,
+                echo=bool(self.config.database.echo),
+                legacy_schema_aliasing=True,
+                pool_size = int(self.pool_size),
+                pool_recycle=int(self.config.database.pool_recycle)
+            )
         elif self.dbtype == 'postgresql':
             return create_engine(
                 self.dburl,
